@@ -1,0 +1,103 @@
+{
+  "entities": {
+    "TreatmentLine": {
+      "title": "Treatment Line",
+      "description": "Beauty treatment line (e.g., Hidratherapy)",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string" },
+        "color": { "type": "string" },
+        "emoji": { "type": "string" },
+        "descripcion": { "type": "string" },
+        "activa": { "type": "boolean" },
+        "orden": { "type": "number" },
+        "creadoEn": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nombre", "color", "emoji", "activa"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "S Professional salon product",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string" },
+        "lineaId": { "type": "string" },
+        "emoji": { "type": "string" },
+        "descripcion": { "type": "string" },
+        "tipo": { "enum": ["after_care", "cabina", "ambos"] },
+        "stockActual": { "type": "number" },
+        "stockMinimo": { "type": "number" },
+        "precio": { "type": "number" },
+        "costo": { "type": "number" },
+        "unidad": { "type": "string" },
+        "codigo": { "type": "string" },
+        "activo": { "type": "boolean" },
+        "creadoEn": { "type": "string", "format": "date-time" },
+        "actualizadoEn": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nombre", "lineaId", "stockActual", "stockMinimo"]
+    },
+    "Movement": {
+      "title": "Movement",
+      "description": "Stock movement (income or outcome)",
+      "type": "object",
+      "properties": {
+        "productoId": { "type": "string" },
+        "lineaId": { "type": "string" },
+        "tipo": { "enum": ["ingreso", "egreso"] },
+        "cantidad": { "type": "number" },
+        "stockAnterior": { "type": "number" },
+        "stockNuevo": { "type": "number" },
+        "nota": { "type": "string" },
+        "usuarioId": { "type": "string" },
+        "fechaHora": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productoId", "lineaId", "tipo", "cantidad", "stockAnterior", "stockNuevo", "usuarioId"]
+    },
+    "Promotion": {
+      "title": "Promotion",
+      "description": "Discount promotion",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string" },
+        "productos": { 
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productoId": { "type": "string" },
+              "nombre": { "type": "string" },
+              "precioUnitario": { "type": "number" }
+            }
+          }
+        },
+        "subtotalRegular": { "type": "number" },
+        "tipoDescuento": { "enum": ["porcentaje", "monto_fijo"] },
+        "valorDescuento": { "type": "number" },
+        "totalFinal": { "type": "number" },
+        "activa": { "type": "boolean" },
+        "creadoEn": { "type": "string", "format": "date-time" },
+        "usuarioId": { "type": "string" }
+      },
+      "required": ["nombre", "subtotalRegular", "tipoDescuento", "valorDescuento", "totalFinal", "activa"]
+    }
+  },
+  "firestore": {
+    "lineas_tratamiento/{lineaId}": {
+      "schema": "TreatmentLine",
+      "description": "Collections of beauty treatment lines"
+    },
+    "productos/{productoId}": {
+      "schema": "Product",
+      "description": "Catalog of S Professional products"
+    },
+    "movimientos/{movimientoId}": {
+      "schema": "Movement",
+      "description": "Log of all stock movements"
+    },
+    "promociones/{promoId}": {
+      "schema": "Promotion",
+      "description": "Promotional offers and bundles"
+    }
+  }
+}
