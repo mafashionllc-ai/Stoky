@@ -170,10 +170,10 @@ export const ReportesScreen: React.FC = () => {
         </div>
         <button 
           onClick={exportToExcel}
-          className="flex items-center space-x-2 bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-2xl border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-bold text-xs"
+          className="flex items-center space-x-2 bg-emerald-500 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-all font-black text-[10px] tracking-widest uppercase"
         >
-          <Download size={14} />
-          <span>EXCEL</span>
+          <Download size={16} />
+          <span>DESCARGAR EXCEL</span>
         </button>
       </header>
 
@@ -240,15 +240,23 @@ export const ReportesScreen: React.FC = () => {
             <Activity size={18} className="text-emerald-500" />
             <h3 className="text-white font-bold text-sm uppercase tracking-widest">Flujo de Inventario</h3>
           </div>
-          <div className="flex items-center space-x-6">
-            <div className="text-center">
-              <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Entradas</p>
-              <p className="text-xs font-black text-emerald-500">{timelineData.reduce((acc, d) => acc + d.ingresos, 0)}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Salidas</p>
-              <p className="text-xs font-black text-rose-500">{timelineData.reduce((acc, d) => acc + d.egresos, 0)}</p>
-            </div>
+          <button 
+            onClick={exportToExcel}
+            className="p-2 bg-white/5 hover:bg-emerald-500/20 text-slate-400 hover:text-emerald-500 rounded-xl transition-all border border-white/5"
+            title="Descargar Reporte Completo"
+          >
+            <Download size={16} />
+          </button>
+        </div>
+        
+        <div className="flex items-center justify-end space-x-6 mb-6">
+          <div className="text-center">
+            <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Entradas</p>
+            <p className="text-xs font-black text-emerald-500">{timelineData.reduce((acc, d) => acc + d.ingresos, 0)}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Salidas</p>
+            <p className="text-xs font-black text-rose-500">{timelineData.reduce((acc, d) => acc + d.egresos, 0)}</p>
           </div>
         </div>
 

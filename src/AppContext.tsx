@@ -8,6 +8,8 @@ import { getLines, getProducts, getMovements, getPromotions, initializeAppCatalo
 interface AppContextType extends AppState {
   setDarkMode: (val: boolean) => void;
   logout: () => void;
+  installApp: () => void;
+  isInstallable: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -20,6 +22,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const installApp = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
 
   useEffect(() => {
     let unsubs: (() => void)[] = [];
@@ -100,7 +125,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     isLoading,
     isDarkMode,
     setDarkMode: setIsDarkMode,
-    logout
+    logout,
+    installApp,
+    isInstallable: !!deferredPrompt
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

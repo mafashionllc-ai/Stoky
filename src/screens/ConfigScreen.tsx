@@ -2,15 +2,55 @@
 import React, { useState } from 'react';
 import { useApp } from '../AppContext';
 import { motion } from 'motion/react';
-import { LogOut, Sun, Moon, Info, ShieldCheck, ChevronRight, MessageSquare, Layers } from 'lucide-react';
+import { LogOut, Sun, Moon, Info, ShieldCheck, ChevronRight, MessageSquare, Layers, Download } from 'lucide-react';
 import { AdminLinesModal } from '../components/AdminLinesModal';
 
+interface ConfigItem {
+  label: string;
+  icon: any;
+  action?: () => void;
+  value?: string | boolean;
+  toggle?: boolean;
+  color?: string;
+  visible?: boolean;
+}
+
+interface ConfigSection {
+  title: string;
+  items: ConfigItem[];
+}
+
 export const ConfigScreen: React.FC = () => {
-  const { logout, isDarkMode, setDarkMode, user, lines } = useApp();
+  const { logout, isDarkMode, setDarkMode, user, lines, installApp, isInstallable } = useApp();
 
   const [isAdminLinesOpen, setIsAdminLinesOpen] = useState(false);
 
-  const sections = [
+  const sections: ConfigSection[] = [
+    {
+      title: 'APP MÓVIL',
+      items: [
+        { 
+          label: 'Descargar e Instalar App', 
+          icon: Download, 
+          action: installApp, 
+          visible: isInstallable,
+          color: 'text-emerald-500'
+        },
+        { 
+          label: 'Compartir App', 
+          icon: ChevronRight, 
+          action: () => {
+            if (navigator.share) {
+              navigator.share({
+                title: 'MA Fashion - Inventario',
+                text: 'Sistema de gestión de inventario para MA Fashion',
+                url: window.location.origin
+              });
+            }
+          } 
+        },
+      ]
+    },
     {
       title: 'ADMINISTRACIÓN',
       items: [
@@ -67,7 +107,7 @@ export const ConfigScreen: React.FC = () => {
           <div key={section.title}>
             <h3 className="text-slate-500 text-[10px] font-black tracking-[0.2em] mb-4">{section.title}</h3>
             <div className="bg-[#24243E] rounded-3xl overflow-hidden border border-white/5">
-              {section.items.map((item, i) => (
+              {section.items.filter(item => item.visible !== false).map((item, i) => (
                 <button
                   key={i}
                   onClick={item.action}
