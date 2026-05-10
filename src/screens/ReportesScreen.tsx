@@ -1,13 +1,20 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '../AppContext';
 import { motion } from 'motion/react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Package, Layers, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LineChart, Line, Legend } from 'recharts';
+import { Package, Layers, Activity, AlertTriangle, TrendingUp, Download, Calendar, Filter } from 'lucide-react';
 import { LINE_COLORS } from '../theme/colors';
+import { format, startOfDay, endOfDay, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isWithinInterval, eachDayOfInterval, startOfYear, endOfYear, parseISO } from 'date-fns';
+import * as XLSX from 'xlsx';
+
+type TimeFilter = 'hoy' | 'semana' | 'mes' | 'año' | 'personalizado';
 
 export const ReportesScreen: React.FC = () => {
   const { products, lines, movements } = useApp();
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('mes');
+  const [customRange, setCustomRange] = useState({ start: format(subDays(new Date(), 30), 'yyyy-MM-dd'), end: format(new Date(), 'yyyy-MM-dd') });
+  const [showCustomPicker, setShowCustomPicker] = useState(false);
 
   const metrics = useMemo(() => {
     const today = new Date();
@@ -27,7 +34,7 @@ export const ReportesScreen: React.FC = () => {
     }, 0);
 
     return [
-      { label: 'Valor Inventario', value: `$${totalStockValue.toLocaleString()}`, icon: TrendingUp, color: '#10B981', helper: totalStockValue === 0 && products.length > 0 ? 'Registra ingresos para ver valor' : '' },
+      { label: 'Valor Inventario', value: `$${totalStockValue.toLocaleString()}`, icon: TrendingUp, color: '#10B981', helper: totalStockValue === 0 && products.length > 0 ? 'Registra ingresos para ver valor' : 'Costo total de productos en stock' },
       { label: 'Stock Bajo', value: lowStock.length, icon: AlertTriangle, color: '#F59E0B' },
       { label: 'Productos', value: products.length, icon: Package, color: '#6C63FF' },
       { label: 'Líneas', value: lines.length, icon: Layers, color: '#FF6584' },
@@ -80,6 +87,80 @@ export const ReportesScreen: React.FC = () => {
       .slice(0, 5);
   }, [movements, products, lines]);
 
+  const timelineData = useMemo(() => {
+    let start: Date;
+    let end: Date = endOfDay(new Date());
+
+    switch (timeFilter) {
+      case 'hoy':
+        start = startOfDay(new Date());
+        break;
+      case 'semana':
+        start = startOfWeek(new Date());
+        break;
+      case 'mes':
+        start = startOfMonth(new Date());
+        break;
+      case 'año':
+        start = startOfYear(new Date());
+        break;
+      case 'personalizado':
+        start = startOfDay(parseISO(customRange.start));
+        end = endOfDay(parseISO(customRange.end));
+        break;
+      default:
+        start = startOfMonth(new Date());
+    }
+
+    const filteredMovements = movements.filter(m => {
+      const mDate = (m.fechaHora as any)?.toDate ? (m.fechaHora as any).toDate() : new Date();
+      return isWithinInterval(mDate, { start, end });
+    });
+
+    const days = eachDayOfInterval({ start, end });
+    return days.map(day => {
+      const dayStr = format(day, 'MMM dd');
+      const dayMoves = filteredMovements.filter(m => {
+        const mDate = (m.fechaHora as any)?.toDate ? (m.fechaHora as any).toDate() : new Date();
+        return format(mDate, 'MMM dd') === dayStr;
+      });
+
+      const ingresos = dayMoves.filter(m => m.tipo === 'ingreso').reduce((acc, m) => acc + (m.cantidad || 0), 0);
+      const egresos = dayMoves.filter(m => m.tipo === 'egreso').reduce((acc, m) => acc + (m.cantidad || 0), 0);
+
+      return {
+        date: dayStr,
+        fullDate: format(day, 'yyyy-MM-dd'),
+        ingresos,
+        egresos,
+      };
+    });
+  }, [movements, timeFilter, customRange]);
+
+  const exportToExcel = () => {
+    const dataToExport = movements.map(m => {
+      const prod = products.find(p => p.id === m.productoId);
+      const line = lines.find(l => l.id === m.lineaId);
+      return {
+        Fecha: (m.fechaHora as any)?.toDate ? format((m.fechaHora as any).toDate(), 'yyyy-MM-dd HH:mm') : '',
+        Producto: prod?.nombre || 'N/A',
+        Linea: line?.nombre || 'N/A',
+        Tipo: m.tipo === 'ingreso' ? 'ENTRADA' : 'SALIDA',
+        Cantidad: m.cantidad,
+        StockAnterior: m.stockAnterior,
+        StockNuevo: m.stockNuevo,
+        CostoUnitario: prod?.costo || 0,
+        ValorMovimiento: (m.cantidad * (prod?.costo || 0)).toFixed(2),
+        Nota: m.note || m.nota || ''
+      };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Movimientos");
+    XLSX.writeFile(wb, `Reporte_Movimientos_${format(new Date(), 'yyyy-MM-dd')}.xlsx`);
+  };
+
   return (
     <div className="pb-28 px-4 pt-4 bg-[#1A1A2E] min-h-screen">
       <header className="flex items-center justify-between py-4 bg-opacity-50 backdrop-blur-md mb-2">
@@ -87,7 +168,112 @@ export const ReportesScreen: React.FC = () => {
           <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center font-black text-lg shadow-lg shadow-emerald-500/20">R</div>
           <h1 className="text-xl font-black tracking-tighter text-white uppercase italic">Reportes</h1>
         </div>
+        <button 
+          onClick={exportToExcel}
+          className="flex items-center space-x-2 bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-2xl border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-bold text-xs"
+        >
+          <Download size={14} />
+          <span>EXCEL</span>
+        </button>
       </header>
+
+      {/* Timeline Filter */}
+      <div className="bg-[#24243E] p-2 rounded-2xl border border-white/5 mb-6 flex items-center justify-between overflow-x-auto no-scrollbar">
+        <div className="flex items-center space-x-1 min-w-max">
+          {(['hoy', 'semana', 'mes', 'año', 'personalizado'] as TimeFilter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => {
+                setTimeFilter(f);
+                if (f === 'personalizado') setShowCustomPicker(true);
+                else setShowCustomPicker(false);
+              }}
+              className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all ${
+                timeFilter === f ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:bg-white/5'
+              }`}
+            >
+              {f === 'hoy' ? 'Hoy' : f === 'semana' ? 'Semana' : f === 'mes' ? 'Mes' : f === 'año' ? 'Año' : 'Filtro'}
+            </button>
+          ))}
+        </div>
+        {timeFilter === 'personalizado' && (
+          <button 
+            onClick={() => setShowCustomPicker(!showCustomPicker)}
+            className="p-1.5 text-slate-400 hover:text-white transition-colors"
+          >
+            <Calendar size={16} />
+          </button>
+        )}
+      </div>
+
+      {showCustomPicker && timeFilter === 'personalizado' && (
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="bg-[#24243E] p-4 rounded-3xl border border-white/5 mb-6 grid grid-cols-2 gap-3"
+        >
+          <div>
+            <label className="text-[8px] font-black uppercase text-slate-500 mb-1 block">Desde</label>
+            <input 
+              type="date" 
+              value={customRange.start}
+              onChange={(e) => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
+              className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl p-2 text-white text-xs"
+            />
+          </div>
+          <div>
+            <label className="text-[8px] font-black uppercase text-slate-500 mb-1 block">Hasta</label>
+            <input 
+              type="date" 
+              value={customRange.end}
+              onChange={(e) => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
+              className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl p-2 text-white text-xs"
+            />
+          </div>
+        </motion.div>
+      )}
+
+      {/* Timeline Chart */}
+      <div className="bg-[#24243E] rounded-3xl p-6 border border-white/5 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-2">
+            <Activity size={18} className="text-emerald-500" />
+            <h3 className="text-white font-bold text-sm uppercase tracking-widest">Flujo de Inventario</h3>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="text-center">
+              <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Entradas</p>
+              <p className="text-xs font-black text-emerald-500">{timelineData.reduce((acc, d) => acc + d.ingresos, 0)}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Salidas</p>
+              <p className="text-xs font-black text-rose-500">{timelineData.reduce((acc, d) => acc + d.egresos, 0)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={timelineData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+              <XAxis 
+                dataKey="date" 
+                tick={{ fill: '#94A3B8', fontSize: 9 }} 
+                axisLine={false} 
+                tickLine={false}
+                interval={timelineData.length > 10 ? Math.floor(timelineData.length / 5) : 0}
+              />
+              <YAxis tick={{ fill: '#94A3B8', fontSize: 9 }} axisLine={false} tickLine={false} />
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#1A1A2E', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '10px' }}
+                itemStyle={{ padding: '0px' }}
+              />
+              <Line type="monotone" dataKey="ingresos" stroke="#10B981" strokeWidth={3} dot={false} activeDot={{ r: 4 }} />
+              <Line type="monotone" dataKey="egresos" stroke="#F43F5E" strokeWidth={3} dot={false} activeDot={{ r: 4 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
 
       {/* Metric Grid */}
       <div className="grid grid-cols-2 gap-3 mb-6">
