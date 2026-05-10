@@ -110,8 +110,15 @@ export const initializeAppCatalog = async () => {
           descripcion: '',
           creadoEn: serverTimestamp()
         });
+      } else if (!existing.costo || existing.costo === 0 || !existing.precio || existing.precio === 0) {
+        // Forzamos actualización de costo y precio si están en 0 o faltan
+        const productRef = doc(db, 'productos', existing.id);
+        batch.update(productRef, {
+          costo: productData.costo,
+          precio: productData.precio,
+          actualizadoEn: serverTimestamp()
+        });
       }
-      // Se eliminó el batch.update forzado para permitir que los cambios del usuario persistan
     }
 
     await batch.commit();

@@ -20,10 +20,14 @@ export const ReportesScreen: React.FC = () => {
     });
 
     const lowStock = products.filter(p => p.stockActual <= p.stockMinimo);
-    const totalStockValue = products.reduce((acc, p) => acc + (p.stockActual * (p.costo || 0)), 0);
+    const totalStockValue = products.reduce((acc, p) => {
+      const stock = Number(p.stockActual) || 0;
+      const cost = Number(p.costo) || 0;
+      return acc + (stock * cost);
+    }, 0);
 
     return [
-      { label: 'Valor Stock', value: `$${totalStockValue.toLocaleString()}`, icon: TrendingUp, color: '#10B981' },
+      { label: 'Costo Stock', value: `$${totalStockValue.toLocaleString()}`, icon: TrendingUp, color: '#10B981' },
       { label: 'Stock Bajo', value: lowStock.length, icon: AlertTriangle, color: '#F59E0B' },
       { label: 'Productos', value: products.length, icon: Package, color: '#6C63FF' },
       { label: 'Líneas', value: lines.length, icon: Layers, color: '#FF6584' },
@@ -33,10 +37,17 @@ export const ReportesScreen: React.FC = () => {
   const lineValueData = useMemo(() => {
     return lines.map(line => {
       const lineProducts = products.filter(p => p.lineaId === line.id);
-      const total = lineProducts.reduce((acc, p) => acc + (p.stockActual * (p.costo || 0)), 0);
-      const cabin = lineProducts.filter(p => p.tipo === 'cabina').reduce((acc, p) => acc + (p.stockActual * (p.costo || 0)), 0);
-      const home = lineProducts.filter(p => p.tipo === 'after_care').reduce((acc, p) => acc + (p.stockActual * (p.costo || 0)), 0);
-      const ambos = lineProducts.filter(p => p.tipo === 'ambos').reduce((acc, p) => acc + (p.stockActual * (p.costo || 0)), 0);
+      
+      const calcTotalValue = (prods: any[]) => prods.reduce((acc, p) => {
+        const stock = Number(p.stockActual) || 0;
+        const cost = Number(p.costo) || 0;
+        return acc + (stock * cost);
+      }, 0);
+
+      const total = calcTotalValue(lineProducts);
+      const cabin = calcTotalValue(lineProducts.filter(p => p.tipo === 'cabina'));
+      const home = calcTotalValue(lineProducts.filter(p => p.tipo === 'after_care'));
+      const ambos = calcTotalValue(lineProducts.filter(p => p.tipo === 'ambos'));
       
       return {
         name: line.nombre,
