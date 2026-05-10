@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'fire
 import { auth } from '../firebase';
 import { motion, AnimatePresence } from 'motion/react';
 import { LogIn, Mail, Lock, UserPlus } from 'lucide-react';
+import { InstallPrompt } from '../components/InstallPrompt';
 
 export const LoginScreen: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -62,7 +63,9 @@ export const LoginScreen: React.FC = () => {
           <p className="text-indigo-400/70 text-[10px] font-bold uppercase tracking-[0.3em] -mt-1">S Professional USA</p>
         </div>
 
-        <div className="bg-[#24243E]/50 border border-indigo-900/30 p-8 rounded-[32px] backdrop-blur-xl">
+        <InstallPrompt />
+
+        <div className="mt-6 bg-[#24243E]/50 border border-indigo-900/30 p-8 rounded-[32px] backdrop-blur-xl">
           <AnimatePresence mode="wait">
             <motion.h2 
               key={isRegistering ? 'reg' : 'log'}
