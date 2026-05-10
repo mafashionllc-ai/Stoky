@@ -27,7 +27,7 @@ export const ReportesScreen: React.FC = () => {
     }, 0);
 
     return [
-      { label: 'Costo Stock', value: `$${totalStockValue.toLocaleString()}`, icon: TrendingUp, color: '#10B981' },
+      { label: 'Valor Inventario', value: `$${totalStockValue.toLocaleString()}`, icon: TrendingUp, color: '#10B981', helper: totalStockValue === 0 && products.length > 0 ? 'Registra ingresos para ver valor' : '' },
       { label: 'Stock Bajo', value: lowStock.length, icon: AlertTriangle, color: '#F59E0B' },
       { label: 'Productos', value: products.length, icon: Package, color: '#6C63FF' },
       { label: 'Líneas', value: lines.length, icon: Layers, color: '#FF6584' },
@@ -108,6 +108,9 @@ export const ReportesScreen: React.FC = () => {
                 <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest leading-none">{metric.label}</span>
               </div>
               <p className="text-3xl font-black text-white">{metric.value}</p>
+              {(metric as any).helper && (
+                <p className="text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-tight">{(metric as any).helper}</p>
+              )}
             </motion.div>
           );
         })}
