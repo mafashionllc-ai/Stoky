@@ -53,8 +53,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const installApp = async () => {
     if (!deferredPrompt) {
-      // Si no hay prompt automático, damos instrucciones para Android
-      alert('Para instalar en Android:\n1. Toca los 3 puntos (⋮) arriba a la derecha.\n2. Toca "Instalar aplicación" o "Añadir a pantalla de inicio".');
       return;
     }
     deferredPrompt.prompt();

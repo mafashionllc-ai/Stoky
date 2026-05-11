@@ -4,6 +4,7 @@ import { useApp } from '../AppContext';
 import { motion } from 'motion/react';
 import { LogOut, Sun, Moon, Info, ShieldCheck, ChevronRight, MessageSquare, Layers, Download } from 'lucide-react';
 import { AdminLinesModal } from '../components/AdminLinesModal';
+import { InstallGuideModal } from '../components/InstallGuideModal';
 
 interface ConfigItem {
   label: string;
@@ -24,16 +25,32 @@ export const ConfigScreen: React.FC = () => {
   const { logout, isDarkMode, setDarkMode, user, lines, installApp, isInstallable, isInstalled } = useApp();
 
   const [isAdminLinesOpen, setIsAdminLinesOpen] = useState(false);
+  const [isInstallGuideOpen, setIsInstallGuideOpen] = useState(false);
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const platform = isIOS ? 'ios' : 'android';
+
+  const handleInstallClick = () => {
+    if (platform === 'android') {
+      installApp(); // Try native install first
+      // If no native prompt, we can optionally show the guide modal too
+      // But installApp already handles showing an alert if no prompt exists.
+      // Let's make it more elegant:
+      setIsInstallGuideOpen(true);
+    } else {
+      setIsInstallGuideOpen(true);
+    }
+  };
 
   const sections: ConfigSection[] = [
     {
       title: 'APP MÓVIL',
       items: [
         { 
-          label: 'Descargar e Instalar App', 
+          label: isInstalled ? 'App Instalada' : 'Instalar en este Dispositivo', 
           icon: Download, 
-          action: installApp, 
-          visible: isInstallable && !isInstalled,
+          action: handleInstallClick, 
+          visible: !isInstalled,
           color: 'text-emerald-500'
         },
         { 
@@ -148,6 +165,12 @@ export const ConfigScreen: React.FC = () => {
         isOpen={isAdminLinesOpen}
         onClose={() => setIsAdminLinesOpen(false)}
         lines={lines}
+      />
+
+      <InstallGuideModal 
+        isOpen={isInstallGuideOpen}
+        onClose={() => setIsInstallGuideOpen(false)}
+        platform={platform}
       />
     </div>
   );
