@@ -80,10 +80,17 @@ export const initializeAppCatalog = async () => {
         lineMap[lineDef.nombre!] = newRef.id;
       } else {
         lineMap[lineDef.nombre!] = existing.id;
+        // Opcionalmente actualizar si hubo cambios en color/emoji/orden
+        if (existing.color !== lineDef.color || existing.emoji !== lineDef.emoji || existing.orden !== lineDef.orden) {
+          batch.update(doc(db, 'lineas_tratamiento', existing.id), {
+            ...lineDef,
+            actualizadoEn: serverTimestamp()
+          });
+        }
       }
     }
 
-    // 3. Sincronizar Productos (34 productos)
+    // 3. Sincronizar Productos
     for (const prodDef of INITIAL_PRODUCTS) {
       const existing = existingProducts.find(p => p.codigo === prodDef.codigo);
       const lineaId = lineMap[prodDef.lineaNombre] || lineMap['Otros'] || '';
@@ -110,12 +117,11 @@ export const initializeAppCatalog = async () => {
           descripcion: '',
           creadoEn: serverTimestamp()
         });
-      } else if (!existing.costo || existing.costo === 0 || !existing.precio || existing.precio === 0) {
-        // Forzamos actualización de costo y precio si están en 0 o faltan
+      } else if (existing.costo !== prodDef.costo || existing.precio !== prodDef.precio || existing.nombre !== prodDef.nombre) {
+        // Actualizamos si cambió el precio, costo o nombre
         const productRef = doc(db, 'productos', existing.id);
         batch.update(productRef, {
-          costo: productData.costo,
-          precio: productData.precio,
+          ...productData,
           actualizadoEn: serverTimestamp()
         });
       }

@@ -24,6 +24,8 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
   const [tipo, setTipo] = useState<Product['tipo']>('ambos');
   const [loading, setLoading] = useState(false);
 
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+
   useEffect(() => {
     if (productToEdit) {
       setNombre(productToEdit.nombre || '');
@@ -36,6 +38,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
       setStockMinimo(productToEdit.stockMinimo?.toString() || '5');
       setStockActual(productToEdit.stockActual?.toString() || '0');
       setTipo(productToEdit.tipo || 'ambos');
+      setShowConfirmDelete(false);
     } else {
       setNombre('');
       setEmoji('📦');
@@ -47,6 +50,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
       setStockMinimo('5');
       setStockActual('0');
       setTipo('ambos');
+      setShowConfirmDelete(false);
     }
   }, [productToEdit, lines]);
 
@@ -90,12 +94,20 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
   };
 
   const handleDelete = async () => {
-    if (!productToEdit?.id || !confirm('¿Eliminar producto?')) return;
+    if (!productToEdit?.id) return;
+    if (!showConfirmDelete) {
+      setShowConfirmDelete(true);
+      return;
+    }
+
+    setLoading(true);
     try {
       await deleteProduct(productToEdit.id);
       onClose();
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -229,7 +241,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                 <button 
                   disabled={loading}
                   onClick={handleSave}
-                  className="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-600/20 flex items-center justify-center space-x-2 active:scale-95 transition-all"
+                  className="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-600/20 flex items-center justify-center space-x-2 active:scale-95 transition-all disabled:opacity-50"
                 >
                   <Save size={20}/>
                   <span className="uppercase tracking-widest text-sm">{productToEdit ? 'GUARDAR CAMBIOS' : 'CREAR PRODUCTO'}</span>
@@ -237,11 +249,23 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                 
                 {productToEdit && (
                   <button 
+                    disabled={loading}
                     onClick={handleDelete}
-                    className="w-full bg-red-600/10 text-red-500 font-black py-4 rounded-2xl flex items-center justify-center space-x-2"
+                    className={`w-full font-black py-4 rounded-2xl flex items-center justify-center space-x-2 transition-all ${showConfirmDelete ? 'bg-red-600 text-white' : 'bg-red-600/10 text-red-500'}`}
                   >
                     <Trash2 size={18}/>
-                    <span className="uppercase tracking-widest text-xs">ELIMINAR PRODUCTO</span>
+                    <span className="uppercase tracking-widest text-xs">
+                      {showConfirmDelete ? '¿CONFIRMAR ELIMINAR?' : 'ELIMINAR PRODUCTO'}
+                    </span>
+                  </button>
+                )}
+                
+                {showConfirmDelete && (
+                  <button 
+                    onClick={() => setShowConfirmDelete(false)}
+                    className="w-full text-gray-500 font-bold py-2 text-[10px] uppercase tracking-widest"
+                  >
+                    Cancelar
                   </button>
                 )}
               </div>
