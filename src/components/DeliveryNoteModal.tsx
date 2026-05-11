@@ -125,7 +125,12 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
         total,
         usuarioId: user.uid,
         observaciones,
-        actualizadoEn: timestamp
+        actualizadoEn: timestamp,
+        ...(editNote ? {} : {
+          statusArmado: false,
+          statusEntregado: false,
+          statusCobrado: false
+        })
       };
 
       if (editNote) {

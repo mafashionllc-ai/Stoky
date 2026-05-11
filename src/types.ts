@@ -90,6 +90,9 @@ export interface DeliveryNote {
   total: number;
   usuarioId: string;
   observaciones?: string;
+  statusArmado?: boolean;
+  statusEntregado?: boolean;
+  statusCobrado?: boolean;
 }
 
 export interface AppState {
