@@ -6,6 +6,7 @@ import { HomeScreen } from './screens/HomeScreen';
 import { MovimientosScreen } from './screens/MovimientosScreen';
 import { PromocionesScreen } from './screens/PromocionesScreen';
 import { ReportesScreen } from './screens/ReportesScreen';
+import { EntregasScreen } from './screens/EntregasScreen';
 import { ConfigScreen } from './screens/ConfigScreen';
 import { BottomTabNavigator } from './navigation/BottomTabNavigator';
 import { AnimatePresence, motion } from 'motion/react';
@@ -31,6 +32,7 @@ export default function App() {
       case 'home': return <HomeScreen />;
       case 'moves': return <MovimientosScreen />;
       case 'promos': return <PromocionesScreen />;
+      case 'delivery': return <EntregasScreen />;
       case 'reports': return <ReportesScreen />;
       case 'config': return <ConfigScreen />;
       default: return <HomeScreen />;

@@ -9,7 +9,7 @@ import { LineaChip } from '../components/LineaChip';
 
 export const MovimientosScreen: React.FC = () => {
   const { movements, products, lines } = useApp();
-  const [filterType, setFilterType] = useState<'all' | 'ingreso' | 'egreso'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'ingreso' | 'egreso'>('egreso');
   const [selectedLineId, setSelectedLineId] = useState<'all' | string>('all');
 
   const filteredMovements = React.useMemo(() => {
@@ -42,16 +42,16 @@ export const MovimientosScreen: React.FC = () => {
           TODOS
         </button>
         <button 
-          onClick={() => setFilterType('ingreso')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'ingreso' ? 'bg-[#10B981] text-white' : 'bg-[#24243E] text-slate-400'}`}
-        >
-          INGRESOS
-        </button>
-        <button 
           onClick={() => setFilterType('egreso')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'egreso' ? 'bg-[#F59E0B] text-white' : 'bg-[#24243E] text-slate-400'}`}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'egreso' ? 'bg-[#f43f5e] text-white shadow-lg shadow-rose-500/20' : 'bg-[#24243E] text-slate-400'}`}
         >
           EGRESOS
+        </button>
+        <button 
+          onClick={() => setFilterType('ingreso')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'ingreso' ? 'bg-[#10B981] text-white shadow-lg shadow-emerald-500/20' : 'bg-[#24243E] text-slate-400'}`}
+        >
+          INGRESOS
         </button>
       </div>
 

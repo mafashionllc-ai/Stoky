@@ -92,23 +92,23 @@ export const MovementModal: React.FC<MovementModalProps> = ({ product, line, isO
 
           <div className="grid grid-cols-2 gap-4">
             <button
-              disabled={isSubmitting}
-              onClick={() => handleMovement('ingreso')}
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#10B981] hover:bg-[#059669] text-white transition-all disabled:opacity-50"
-            >
-              <ArrowDownCircle size={32} className="mb-2" />
-              <span className="font-bold">INGRESO</span>
-            </button>
-
-            <button
               disabled={isSubmitting || product.stockActual < cantidad}
               onClick={() => handleMovement('egreso')}
               className={`flex flex-col items-center justify-center p-4 rounded-2xl text-white transition-all disabled:opacity-50 ${
-                product.stockActual < cantidad ? 'bg-slate-700 cursor-not-allowed' : 'bg-[#F59E0B] hover:bg-[#D97706]'
+                product.stockActual < cantidad ? 'bg-slate-700 cursor-not-allowed' : 'bg-[#f43f5e] hover:bg-rose-600 shadow-lg shadow-rose-500/20'
               }`}
             >
               <ArrowUpCircle size={32} className="mb-2" />
-              <span className="font-bold">EGRESO</span>
+              <span className="font-bold uppercase tracking-widest text-xs">Salida</span>
+            </button>
+
+            <button
+              disabled={isSubmitting}
+              onClick={() => handleMovement('ingreso')}
+              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#10B981] hover:bg-[#059669] text-white transition-all disabled:opacity-50 shadow-lg shadow-emerald-500/20"
+            >
+              <ArrowDownCircle size={32} className="mb-2" />
+              <span className="font-bold uppercase tracking-widest text-xs">Entrada</span>
             </button>
           </div>
           

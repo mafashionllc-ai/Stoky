@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Package, CheckSquare, Square, Trash2, ArrowUpDown, Download } from 'lucide-react';
 
 export const HomeScreen: React.FC = () => {
-  const { products, lines, user, installApp, isInstallable } = useApp();
+  const { products, lines, user, installApp, isInstallable, isInstalled } = useApp();
   const [search, setSearch] = useState('');
   const [selectedLineId, setSelectedLineId] = useState<'all' | string>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -95,26 +95,30 @@ export const HomeScreen: React.FC = () => {
 
       {/* Install Banner */}
       <AnimatePresence>
-        {isInstallable && (
+        {isInstallable && !isInstalled && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             className="mb-6"
           >
-            <div className="bg-gradient-to-r from-emerald-500 to-indigo-600 rounded-3xl p-5 flex items-center justify-between shadow-lg shadow-indigo-500/20">
-              <div className="flex-1">
-                <h3 className="text-white font-black text-sm uppercase tracking-tight mb-1">Descarga MA Fashion</h3>
-                <p className="text-white/80 text-[10px] font-bold leading-tight max-w-[200px]">
-                  Instala la aplicación en tu celular para un acceso rápido y sincronizado.
+            <div className="bg-gradient-to-r from-emerald-500 via-indigo-600 to-purple-600 rounded-3xl p-5 flex items-center justify-between shadow-2xl shadow-indigo-500/30 border border-white/10">
+              <div className="flex-1 pr-4">
+                <div className="flex items-center space-x-2 mb-1">
+                  <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center">
+                    <Download size={10} className="text-white" />
+                  </div>
+                  <h3 className="text-white font-black text-xs uppercase tracking-widest">App Móvil Disponible</h3>
+                </div>
+                <p className="text-white/80 text-[10px] font-bold leading-tight">
+                  Instala para usar sin navegador y recibir actualizaciones automáticas.
                 </p>
               </div>
               <button 
                 onClick={installApp}
-                className="bg-white text-indigo-600 px-4 py-2 rounded-2xl font-black text-[10px] shadow-lg shadow-black/10 active:scale-95 transition-all flex items-center space-x-2"
+                className="bg-white text-indigo-600 px-5 py-2.5 rounded-2xl font-black text-[10px] shadow-xl active:scale-90 transition-all flex items-center space-x-2 border-none ring-4 ring-white/10"
               >
-                <Download size={14} />
-                <span>INSTALAR</span>
+                <span>DESCARGAR</span>
               </button>
             </div>
           </motion.div>

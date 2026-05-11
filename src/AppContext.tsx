@@ -2,14 +2,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
-import { AppState, Product, TreatmentLine, Movement, Promotion } from './types';
-import { getLines, getProducts, getMovements, getPromotions, initializeAppCatalog } from './services/firestoreService';
+import { AppState, Product, TreatmentLine, Movement, Promotion, DeliveryNote } from './types';
+import { getLines, getProducts, getMovements, getPromotions, initializeAppCatalog, getDeliveryNotes } from './services/firestoreService';
 
 interface AppContextType extends AppState {
   setDarkMode: (val: boolean) => void;
   logout: () => void;
   installApp: () => void;
   isInstallable: boolean;
+  isInstalled: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -20,25 +21,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [products, setProducts] = useState<Product[]>([]);
   const [movements, setMovements] = useState<Movement[]>([]);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [deliveryNotes, setDeliveryNotes] = useState<DeliveryNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
+    // Verificar si ya está en modo standalone
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+    setIsInstalled(isStandalone);
+
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
     };
 
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
   const installApp = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      // Si no hay prompt automático, damos instrucciones para Android
+      alert('Para instalar en Android:\n1. Toca los 3 puntos (⋮) arriba a la derecha.\n2. Toca "Instalar aplicación" o "Añadir a pantalla de inicio".');
+      return;
+    }
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
@@ -65,6 +83,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           unsubs.push(getProducts(setProducts));
           unsubs.push(getMovements(setMovements));
           unsubs.push(getPromotions(setPromotions));
+          unsubs.push(getDeliveryNotes(setDeliveryNotes));
         } catch (error) {
           console.error("Error during app initialization:", error);
         } finally {
@@ -122,12 +141,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     products: sortedProducts,
     movements,
     promotions,
+    deliveryNotes,
     isLoading,
     isDarkMode,
     setDarkMode: setIsDarkMode,
     logout,
     installApp,
-    isInstallable: !!deferredPrompt
+    isInstallable: !!deferredPrompt || (!isInstalled && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)),
+    isInstalled
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -21,7 +21,7 @@ interface ConfigSection {
 }
 
 export const ConfigScreen: React.FC = () => {
-  const { logout, isDarkMode, setDarkMode, user, lines, installApp, isInstallable } = useApp();
+  const { logout, isDarkMode, setDarkMode, user, lines, installApp, isInstallable, isInstalled } = useApp();
 
   const [isAdminLinesOpen, setIsAdminLinesOpen] = useState(false);
 
@@ -33,7 +33,7 @@ export const ConfigScreen: React.FC = () => {
           label: 'Descargar e Instalar App', 
           icon: Download, 
           action: installApp, 
-          visible: isInstallable,
+          visible: isInstallable && !isInstalled,
           color: 'text-emerald-500'
         },
         { 

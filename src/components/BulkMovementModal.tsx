@@ -17,7 +17,7 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
   onClose,
   onSuccess
 }) => {
-  const [type, setType] = useState<'ingreso' | 'egreso'>('ingreso');
+  const [type, setType] = useState<'ingreso' | 'egreso'>('egreso');
   const [quantities, setQuantities] = useState<Record<string, number>>(
     selectedProducts.reduce((acc, p) => ({ ...acc, [p.id]: 1 }), {})
   );
@@ -95,22 +95,22 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
               {/* Type Selector */}
               <div className="flex bg-[#24243E] p-1 rounded-2xl relative shadow-inner">
                 <button
+                  onClick={() => setType('egreso')}
+                  className={`flex-1 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2 z-10 transition-colors ${type === 'egreso' ? 'text-white' : 'text-gray-500'}`}
+                >
+                  <ArrowUpRight size={16} className="text-rose-500" />
+                  <span>SALIDA</span>
+                </button>
+                <button
                   onClick={() => setType('ingreso')}
                   className={`flex-1 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2 z-10 transition-colors ${type === 'ingreso' ? 'text-white' : 'text-gray-500'}`}
                 >
                   <ArrowDownRight size={16} className="text-emerald-500" />
                   <span>ENTRADA</span>
                 </button>
-                <button
-                  onClick={() => setType('egreso')}
-                  className={`flex-1 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2 z-10 transition-colors ${type === 'egreso' ? 'text-white' : 'text-gray-500'}`}
-                >
-                  <ArrowUpRight size={16} className="text-red-500" />
-                  <span>SALIDA</span>
-                </button>
                 <motion.div
                   layoutId="bulk-type-bg"
-                  animate={{ x: type === 'ingreso' ? '0%' : '100%' }}
+                  animate={{ x: type === 'egreso' ? '0%' : '100%' }}
                   className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/30"
                 />
               </div>

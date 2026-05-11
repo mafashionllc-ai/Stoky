@@ -251,12 +251,12 @@ export const ReportesScreen: React.FC = () => {
         
         <div className="flex items-center justify-end space-x-6 mb-6">
           <div className="text-center">
-            <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Entradas</p>
-            <p className="text-xs font-black text-emerald-500">{timelineData.reduce((acc, d) => acc + d.ingresos, 0)}</p>
-          </div>
-          <div className="text-center">
             <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Salidas</p>
             <p className="text-xs font-black text-rose-500">{timelineData.reduce((acc, d) => acc + d.egresos, 0)}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Entradas</p>
+            <p className="text-xs font-black text-emerald-500">{timelineData.reduce((acc, d) => acc + d.ingresos, 0)}</p>
           </div>
         </div>
 

@@ -80,6 +80,40 @@
         "usuarioId": { "type": "string" }
       },
       "required": ["nombre", "subtotalRegular", "tipoDescuento", "valorDescuento", "totalFinal", "activa"]
+    },
+    "DeliveryNote": {
+      "title": "Delivery Note",
+      "description": "Document for product delivery with tax and discount calculations",
+      "type": "object",
+      "properties": {
+        "nroNota": { "type": "string" },
+        "receptor": { "type": "string" },
+        "fecha": { "type": "string", "format": "date-time" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productoId": { "type": "string" },
+              "nombre": { "type": "string" },
+              "cantidad": { "type": "number" },
+              "precioUnitario": { "type": "number" },
+              "subtotal": { "type": "number" }
+            }
+          }
+        },
+        "subtotal": { "type": "number" },
+        "aplicarTax": { "type": "boolean" },
+        "taxRate": { "type": "number" },
+        "taxAmount": { "type": "number" },
+        "tipoDescuento": { "enum": ["porcentaje", "monto_fijo"] },
+        "valorDescuento": { "type": "number" },
+        "montoDescuento": { "type": "number" },
+        "total": { "type": "number" },
+        "usuarioId": { "type": "string" },
+        "observaciones": { "type": "string" }
+      },
+      "required": ["nroNota", "receptor", "fecha", "items", "total", "usuarioId"]
     }
   },
   "firestore": {
@@ -98,6 +132,10 @@
     "promociones/{promoId}": {
       "schema": "Promotion",
       "description": "Promotional offers and bundles"
+    },
+    "notas_entrega/{notaId}": {
+      "schema": "DeliveryNote",
+      "description": "Registry of all delivery notes issued"
     }
   }
 }

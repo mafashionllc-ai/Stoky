@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, History, Tag, BarChart3, Settings } from 'lucide-react';
+import { Home, History, Tag, BarChart3, Settings, Receipt } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface BottomTabNavigatorProps {
@@ -13,6 +13,7 @@ export const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({ activeTa
     { id: 'home', icon: Home, label: 'Inicio' },
     { id: 'moves', icon: History, label: 'Moves' },
     { id: 'promos', icon: Tag, label: 'Promos' },
+    { id: 'delivery', icon: Receipt, label: 'Entregas' },
     { id: 'reports', icon: BarChart3, label: 'Stats' },
     { id: 'config', icon: Settings, label: 'Ajustes' },
   ];

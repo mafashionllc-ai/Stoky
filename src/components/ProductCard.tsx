@@ -76,12 +76,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </div>
             {product.codigo && <span className="text-[9px] text-gray-500 font-medium tracking-[0.1em] leading-none mt-1.5 uppercase">#{product.codigo}</span>}
           </div>
-          
-          {product.unidad && (
-            <span className="text-[8px] text-gray-600 font-bold uppercase tracking-wider">
-              {product.unidad}
-            </span>
-          )}
         </div>
       </div>
 
@@ -94,20 +88,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <Edit2 size={14} />
           </button>
         )}
-        <div className="text-right flex flex-col items-end justify-center min-w-[70px]">
+        <div className="text-right flex flex-col items-end justify-center min-w-[80px]">
           {product.precio !== undefined && (
-            <p className="text-[11px] font-black text-indigo-400 italic mb-0.5 tracking-tighter">
+            <p className="text-[15px] font-black text-white italic mb-0.5 tracking-tighter bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20">
               ${product.precio.toFixed(2)}
             </p>
           )}
           {product.costo !== undefined && (
-            <p className="text-[9px] font-bold text-emerald-500/40 tracking-tighter mb-1 uppercase">
-              Costo: ${product.costo.toFixed(2)}
+            <p className="text-[12px] font-black text-emerald-500/70 tracking-tighter mb-1.5 uppercase">
+              ${product.costo.toFixed(2)}
             </p>
           )}
           <p className={`text-base font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}`}>
             {product.stockActual.toString().padStart(2, '0')}
-            <span className="text-[8px] text-gray-600 block font-bold uppercase tracking-tighter mt-0.5">unidades</span>
+            <span className="text-[8px] text-gray-600 block font-bold uppercase tracking-tighter mt-0.5 text-center">unidades</span>
           </p>
         </div>
       </div>

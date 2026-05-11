@@ -16,7 +16,7 @@ import {
   deleteDoc
 } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { Product, TreatmentLine, Movement, Promotion, MovementType } from '../types';
+import { Product, TreatmentLine, Movement, Promotion, MovementType, DeliveryNote } from '../types';
 import { INITIAL_LINES, INITIAL_PRODUCTS } from '../data/catalogoSProfessional';
 
 const ERROR_COLLECTION = 'errors';
@@ -357,4 +357,12 @@ export const deletePromotion = async (id: string) => {
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, 'promociones');
   }
+};
+
+export const getDeliveryNotes = (callback: (notes: DeliveryNote[]) => void) => {
+  const q = query(collection(db, 'notas_entrega'));
+  return onSnapshot(q, (snapshot) => {
+    const notes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as DeliveryNote));
+    callback(notes);
+  }, (error) => handleFirestoreError(error, OperationType.LIST, 'notas_entrega'));
 };
