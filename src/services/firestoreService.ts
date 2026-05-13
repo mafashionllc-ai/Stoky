@@ -372,3 +372,62 @@ export const getDeliveryNotes = (callback: (notes: DeliveryNote[]) => void) => {
     callback(notes);
   }, (error) => handleFirestoreError(error, OperationType.LIST, 'notas_entrega'));
 };
+
+export const createDeliveryNote = async (noteData: Partial<DeliveryNote>) => {
+  if (!auth.currentUser) throw new Error('Not authenticated');
+  try {
+    const ref = collection(db, 'notas_entrega');
+    await addDoc(ref, {
+      ...noteData,
+      usuarioId: auth.currentUser.uid,
+      fecha: noteData.fecha || serverTimestamp(),
+      archived: false,
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.CREATE, 'notas_entrega');
+  }
+};
+
+export const updateDeliveryNote = async (id: string, noteData: Partial<DeliveryNote>) => {
+  if (!auth.currentUser) throw new Error('Not authenticated');
+  try {
+    const ref = doc(db, 'notas_entrega', id);
+    await updateDoc(ref, noteData);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, 'notas_entrega');
+  }
+};
+
+export const archiveDeliveryNote = async (id: string, archived: boolean = true) => {
+  if (!auth.currentUser) throw new Error('Not authenticated');
+  try {
+    const ref = doc(db, 'notas_entrega', id);
+    await updateDoc(ref, { archived });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, 'notas_entrega_archive');
+  }
+};
+
+export const deleteDeliveryNote = async (id: string) => {
+  if (!auth.currentUser) throw new Error('Not authenticated');
+  try {
+    const ref = doc(db, 'notas_entrega', id);
+    await deleteDoc(ref);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, 'notas_entrega');
+  }
+};
+
+export const clearMovementHistory = async () => {
+  if (!auth.currentUser) throw new Error('Not authenticated');
+  try {
+    const batch = writeBatch(db);
+    const q = query(collection(db, 'movimientos'));
+    const snap = await getDocs(q);
+    snap.docs.forEach(d => batch.delete(d.ref));
+    await batch.commit();
+    console.log('Historial de movimientos borrado.');
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, 'clear_movements');
+  }
+};

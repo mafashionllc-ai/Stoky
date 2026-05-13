@@ -129,7 +129,8 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
         ...(editNote ? {} : {
           statusArmado: false,
           statusEntregado: false,
-          statusCobrado: false
+          statusCobrado: false,
+          archived: false
         })
       };
 

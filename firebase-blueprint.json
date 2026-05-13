@@ -111,7 +111,11 @@
         "montoDescuento": { "type": "number" },
         "total": { "type": "number" },
         "usuarioId": { "type": "string" },
-        "observaciones": { "type": "string" }
+        "observaciones": { "type": "string" },
+        "statusArmado": { "type": "boolean" },
+        "statusEntregado": { "type": "boolean" },
+        "statusCobrado": { "type": "boolean" },
+        "archived": { "type": "boolean" }
       },
       "required": ["nroNota", "receptor", "fecha", "items", "total", "usuarioId"]
     }

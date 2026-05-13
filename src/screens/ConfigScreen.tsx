@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { useApp } from '../AppContext';
 import { motion } from 'motion/react';
-import { LogOut, Sun, Moon, Info, ShieldCheck, ChevronRight, MessageSquare, Layers, Download } from 'lucide-react';
+import { LogOut, Sun, Moon, Info, ShieldCheck, ChevronRight, MessageSquare, Layers, Download, Trash2 } from 'lucide-react';
 import { AdminLinesModal } from '../components/AdminLinesModal';
 import { InstallGuideModal } from '../components/InstallGuideModal';
+import { clearMovementHistory } from '../services/firestoreService';
 
 interface ConfigItem {
   label: string;
@@ -106,6 +107,21 @@ export const ConfigScreen: React.FC = () => {
       items: [
         { label: 'Contactar Soporte S Prof.', icon: MessageSquare },
         { label: 'Acerca de STOCKY', icon: Info, value: 'v1.0.0' },
+      ]
+    },
+    {
+      title: 'MANTENIMIENTO',
+      items: [
+        { 
+          label: 'Limpiar Historial Movimientos', 
+          icon: Trash2, 
+          color: 'text-rose-500', 
+          action: () => {
+            if (confirm('¿Estás seguro de borrar TODO el historial de movimientos? Esta acción no se puede deshacer.')) {
+              clearMovementHistory().then(() => alert('Historial borrado exitosamente.'));
+            }
+          } 
+        },
       ]
     }
   ];

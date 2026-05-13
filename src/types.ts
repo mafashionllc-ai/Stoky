@@ -93,6 +93,7 @@ export interface DeliveryNote {
   statusArmado?: boolean;
   statusEntregado?: boolean;
   statusCobrado?: boolean;
+  archived?: boolean;
 }
 
 export interface AppState {

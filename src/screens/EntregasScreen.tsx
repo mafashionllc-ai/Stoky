@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../AppContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Plus, Calendar, User, Receipt, Download, ChevronRight, FileText, X, Printer, Share2, Edit, Trash2 } from 'lucide-react';
+import { Search, Plus, Calendar, User, Receipt, Download, ChevronRight, FileText, X, Printer, Share2, Edit, Trash2, Archive, ArchiveRestore } from 'lucide-react';
 import { DeliveryNoteModal } from '../components/DeliveryNoteModal';
 import { DeliveryNote } from '../types';
 import { format } from 'date-fns';
@@ -10,11 +10,13 @@ import { es } from 'date-fns/locale';
 import { doc, writeBatch, collection, serverTimestamp, increment, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { CheckCircle2, Circle, Package, Truck, DollarSign } from 'lucide-react';
+import { archiveDeliveryNote } from '../services/firestoreService';
 
 export const EntregasScreen: React.FC = () => {
   const { deliveryNotes, products, user, lines } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'pendiente' | 'por_entregar' | 'por_cobrar'>('all');
+  const [showArchived, setShowArchived] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<DeliveryNote | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -107,6 +109,18 @@ export const EntregasScreen: React.FC = () => {
     setSelectedNote(null);
   };
 
+  const handleArchiveNote = async (e: React.MouseEvent, note: DeliveryNote) => {
+    e.stopPropagation();
+    try {
+      await archiveDeliveryNote(note.id, !note.archived);
+      if (!note.archived) {
+        setSelectedNote(null);
+      }
+    } catch (error) {
+      console.error("Error archiving note:", error);
+    }
+  };
+
   const handleOpenNewNote = () => {
     setNoteToEdit(null);
     setIsModalOpen(true);
@@ -123,6 +137,10 @@ export const EntregasScreen: React.FC = () => {
 
   const filteredNotes = useMemo(() => {
     return (deliveryNotes || []).filter(note => {
+      // 0. Archived filter
+      const isArchived = !!note.archived;
+      if (showArchived !== isArchived) return false;
+
       // 1. Search filter
       const matchesSearch = 
         note.receptor.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -131,15 +149,22 @@ export const EntregasScreen: React.FC = () => {
 
       if (!matchesSearch) return false;
 
-      // 2. Status filter
-      if (filter === 'pendiente') {
-        return !note.statusArmado && !note.statusEntregado && !note.statusCobrado;
-      }
-      if (filter === 'por_entregar') {
-        return !note.statusEntregado;
-      }
-      if (filter === 'por_cobrar') {
-        return !note.statusCobrado;
+      // 2. Status filter - ONLY apply to active notes if showArchived is false
+      // BUT if the user is in ARCHIVED view, we show ALL archived notes by default
+      // unless we want to allow filtering archived notes too? 
+      // User says: "estos filtros no deben impedir ver las que esten guardadas"
+      // This implies that in Archived view, the status filters shouldn't hide notes.
+      
+      if (!showArchived) {
+        if (filter === 'pendiente') {
+          return !note.statusArmado && !note.statusEntregado && !note.statusCobrado;
+        }
+        if (filter === 'por_entregar') {
+          return !note.statusEntregado;
+        }
+        if (filter === 'por_cobrar') {
+          return !note.statusCobrado;
+        }
       }
 
       return true;
@@ -148,7 +173,7 @@ export const EntregasScreen: React.FC = () => {
       const dateB = b.fecha instanceof Date ? b.fecha : (b.fecha as any)?.toDate ? (b.fecha as any).toDate() : new Date(b.fecha as any);
       return dateB.getTime() - dateA.getTime();
     });
-  }, [deliveryNotes, searchTerm, filter]);
+  }, [deliveryNotes, searchTerm, filter, showArchived]);
 
   const formatDate = (fecha: any) => {
     try {
@@ -193,30 +218,54 @@ export const EntregasScreen: React.FC = () => {
 
       {/* Filters */}
       <div className="flex items-center space-x-2 mb-8 overflow-x-auto pb-2 scrollbar-none no-scrollbar">
-        {[
-          { id: 'all', label: 'TODOS', icon: FileText },
-          { id: 'pendiente', label: 'PENDIENTE', icon: Circle },
-          { id: 'por_entregar', label: 'POR ENTREGAR', icon: Truck },
-          { id: 'por_cobrar', label: 'POR COBRAR', icon: DollarSign },
-        ].map((btn) => (
-          <button
-            key={btn.id}
-            onClick={() => setFilter(btn.id as any)}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all shrink-0 border ${
-              filter === btn.id 
-                ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20' 
-                : 'bg-white/5 text-slate-500 border-white/5 hover:bg-white/10'
-            }`}
-          >
-            <btn.icon size={12} />
-            <span>{btn.label}</span>
-            {filter === btn.id && (
-              <span className="bg-white/20 px-1.5 py-0.5 rounded-lg text-[8px] ml-1">
-                {filteredNotes.length}
-              </span>
-            )}
-          </button>
-        ))}
+        <button
+          onClick={() => {
+            setShowArchived(!showArchived);
+            setFilter('all'); // Reset status filter when switching view
+          }}
+          className={`flex items-center space-x-3 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shrink-0 border ${
+            showArchived 
+              ? 'bg-amber-500 text-white border-amber-500 shadow-xl shadow-amber-500/30' 
+              : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10'
+          }`}
+        >
+          {showArchived ? <ArchiveRestore size={14} className="animate-pulse" /> : <Archive size={14} />}
+          <span>{showArchived ? 'MOSTRAR NOTAS ACTIVAS' : 'MOSTRAR ARCHIVADAS'}</span>
+          <div className="bg-black/20 px-2 py-0.5 rounded-lg text-[9px] ml-1">
+            {deliveryNotes.filter(n => !!n.archived === !showArchived).length}
+          </div>
+        </button>
+
+        {!showArchived && (
+          <>
+            <div className="w-px h-6 bg-white/10 mx-3 shrink-0" />
+
+            {[
+              { id: 'all', label: 'TODOS', icon: FileText },
+              { id: 'pendiente', label: 'PENDIENTE', icon: Circle },
+              { id: 'por_entregar', label: 'POR ENTREGAR', icon: Truck },
+              { id: 'por_cobrar', label: 'POR COBRAR', icon: DollarSign },
+            ].map((btn) => (
+              <button
+                key={btn.id}
+                onClick={() => setFilter(btn.id as any)}
+                className={`flex items-center space-x-2 px-5 py-3 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all shrink-0 border ${
+                  filter === btn.id 
+                    ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20' 
+                    : 'bg-white/5 text-slate-500 border-white/5 hover:bg-white/10'
+                }`}
+              >
+                <btn.icon size={12} />
+                <span>{btn.label}</span>
+                {filter === btn.id && (
+                  <span className="bg-white/20 px-1.5 py-0.5 rounded-lg text-[8px] ml-1">
+                    {filteredNotes.length}
+                  </span>
+                )}
+              </button>
+            ))}
+          </>
+        )}
       </div>
 
       {/* List */}
@@ -246,21 +295,30 @@ export const EntregasScreen: React.FC = () => {
                     </h3>
                   </div>
                     <div className="flex items-start space-x-3">
-                    <div className="text-right">
-                      <p className="text-white font-black text-2xl italic tracking-tighter leading-none">${note.total.toFixed(2)}</p>
-                      <p className="text-slate-500 text-[8px] font-bold uppercase mt-1">Total Nota</p>
+                      <div className="text-right">
+                        <p className="text-white font-black text-2xl italic tracking-tighter leading-none">${note.total.toFixed(2)}</p>
+                        <p className="text-slate-500 text-[8px] font-bold uppercase mt-1">Total Nota</p>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setNoteToDelete(note);
+                          }}
+                          className="p-3 bg-rose-500/10 text-rose-500 rounded-2xl hover:bg-rose-500 hover:text-white transition-all shadow-md active:scale-90"
+                          title="Eliminar Nota"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                        <button 
+                          onClick={(e) => handleArchiveNote(e, note)}
+                          className={`p-3 rounded-2xl transition-all shadow-md active:scale-90 ${note.archived ? 'bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white' : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white'}`}
+                          title={note.archived ? "Restaurar Nota" : "Archivar Nota"}
+                        >
+                          {note.archived ? <ArchiveRestore size={16} /> : <Archive size={16} />}
+                        </button>
+                      </div>
                     </div>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setNoteToDelete(note);
-                      }}
-                      className="p-3 bg-rose-500/10 text-rose-500 rounded-2xl hover:bg-rose-500 hover:text-white transition-all shadow-md active:scale-90"
-                      title="Eliminar Nota"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
                 </div>
 
                 <div className="flex items-center space-x-4 mb-6">
@@ -364,6 +422,13 @@ export const EntregasScreen: React.FC = () => {
                     <p className="text-slate-400 text-[10px] font-black tracking-widest mt-1">Nº {currentSelectedNote.nroNota}</p>
                   </div>
                   <div className="flex items-center space-x-2 md:space-x-3">
+                    <button 
+                      onClick={(e) => handleArchiveNote(e, currentSelectedNote)}
+                      className={`flex items-center space-x-2 px-3 md:px-4 py-2 border rounded-xl transition-all font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm ${currentSelectedNote.archived ? 'bg-amber-50 border-amber-100 text-amber-600 hover:bg-amber-600 hover:text-white' : 'bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}
+                    >
+                      {currentSelectedNote.archived ? <ArchiveRestore size={14} /> : <Archive size={14} />}
+                      <span className="hidden sm:inline">{currentSelectedNote.archived ? 'Restaurar' : 'Archivar'}</span>
+                    </button>
                     <button 
                       onClick={() => handleEditNote(currentSelectedNote)}
                       className="flex items-center space-x-2 px-3 md:px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm"
