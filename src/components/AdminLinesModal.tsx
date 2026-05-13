@@ -265,7 +265,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                     <motion.div 
                       layout
                       key={line.id} 
-                      className={`group relative bg-[#24243E]/40 hover:bg-[#24243E] p-4 rounded-[28px] border border-white/5 flex items-center justify-between transition-all ${!line.activa && 'opacity-60 grayscale'}`}
+                      className={`group relative bg-[#24243E]/40 hover:bg-[#24243E] p-4 rounded-[28px] border border-white/5 flex items-center justify-between transition-all ${!line.activa && 'opacity-60'}`}
                     >
                       <div className="flex items-center space-x-4">
                         <div className="relative">

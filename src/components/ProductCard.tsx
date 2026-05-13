@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <motion.div
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`bg-[#24243E]/40 px-4 py-3.5 rounded-[24px] flex items-center relative group cursor-pointer transition-all border ${isSelected ? 'ring-2 ring-indigo-500 bg-indigo-500/10' : ''}`}
+      className={`bg-[#24243E]/40 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[24px] flex items-center relative group cursor-pointer transition-all border ${isSelected ? 'ring-2 ring-indigo-500 bg-indigo-500/10' : ''}`}
       style={{ borderColor }}
       id={`product-card-${product.id}`}
     >
@@ -50,49 +50,42 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Container Principal - Horizontal Layout Optimized for Single Column */}
       <div className="flex items-center w-full min-w-0">
         {/* Left: Icon & Line Name */}
-        <div className="flex flex-col items-center justify-center min-w-[44px] sm:min-w-[58px] mr-3 sm:mr-4 border-r border-white/5 pr-3 sm:pr-4">
-          <span className="text-2xl sm:text-3xl filter grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all mb-1">
+        <div className="flex flex-col items-center justify-center min-w-[40px] sm:min-w-[58px] mr-2 sm:mr-4 border-r border-white/5 pr-2 sm:pr-4">
+          <span className="text-xl sm:text-3xl transition-all mb-0.5 sm:mb-1">
             {line?.emoji || '✨'}
           </span>
-          <span className="text-[6px] sm:text-[7px] font-black tracking-widest uppercase opacity-40 truncate max-w-full text-center" style={{ color: lineThemeColor }}>
+          <span className="text-[6px] sm:text-[7px] font-black tracking-widest uppercase opacity-40 truncate max-w-full text-center hidden sm:block" style={{ color: lineThemeColor }}>
              {line?.nombre || 'Gral'}
           </span>
         </div>
 
         {/* Middle: Product Content */}
-        <div className="flex-1 min-w-0 pr-4">
-          <div className="flex items-center space-x-1.5 mb-1 sm:hidden">
-            <span className="text-[7px] font-black tracking-[0.2em] uppercase" style={{ color: lineThemeColor }}>
-               {line?.nombre || 'General'}
-            </span>
-            {product.codigo && <span className="text-[8px] text-gray-500 font-medium tracking-widest">#{product.codigo}</span>}
-          </div>
-          
-          <h4 className="text-[15px] sm:text-[17px] font-normal text-white leading-tight tracking-tight line-clamp-1 mb-1.5">
+        <div className="flex-1 min-w-0 pr-2 sm:pr-4">
+          <h4 className="text-[16px] sm:text-[17px] font-normal text-white leading-tight tracking-tight line-clamp-1 mb-1 sm:mb-1.5">
             {product.nombre}
           </h4>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
              <div className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-md ${typeColor}`}>
-                <span className="scale-75 -ml-0.5">{typeIcon}</span>
-                <span className="text-[6px] sm:text-[7px] font-black tracking-widest uppercase">{typeLabel}</span>
+                <span className="scale-75 sm:scale-100 -ml-0.5 sm:ml-0">{typeIcon}</span>
+                <span className="text-[6px] sm:text-[7px] font-black tracking-widest uppercase hidden sm:inline">{typeLabel}</span>
              </div>
-             {product.codigo && <span className="text-[9px] text-gray-500 font-medium tracking-[0.1em] uppercase hidden sm:inline">#{product.codigo}</span>}
+             {product.codigo && <span className="text-[8px] sm:text-[9px] text-gray-500 font-medium tracking-widest uppercase">#{product.codigo}</span>}
           </div>
         </div>
 
         {/* Right: Prices & Stock */}
-        <div className="flex items-center space-x-4 sm:space-x-8">
+        <div className="flex items-center space-x-3 sm:space-x-8">
           <div className="flex flex-col items-end">
-            <span className="text-white text-xs sm:text-sm font-medium italic opacity-95 tracking-tighter">${product.precio?.toFixed(2)}</span>
-            <span className="text-emerald-500/60 text-[9px] sm:text-[10px] font-medium italic tracking-tighter">${product.costo?.toFixed(2)}</span>
+            <span className="text-white text-[11px] sm:text-sm font-medium italic opacity-95 tracking-tighter">${product.precio?.toFixed(2)}</span>
+            <span className="text-emerald-500/50 text-[8px] sm:text-[10px] font-medium italic tracking-tighter">${product.costo?.toFixed(2)}</span>
           </div>
           
-          <div className="flex flex-col items-center min-w-[36px]">
-            <span className={`text-base sm:text-xl font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}`}>
+          <div className="flex flex-col items-center min-w-[28px] sm:min-w-[36px]">
+            <span className={`text-[15px] sm:text-xl font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}`}>
               {product.stockActual}
             </span>
-            <span className="text-[6px] sm:text-[7px] text-gray-600 uppercase font-black tracking-tighter mt-1">unid</span>
+            <span className="text-[6px] sm:text-[7px] text-gray-600 uppercase font-black tracking-tighter mt-0.5 hidden sm:block">unid</span>
           </div>
 
           <div className="hidden sm:block">
