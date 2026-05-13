@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../AppContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Search, Plus, Minus, Download, User, Receipt, Calculator, Percent, Tag, CheckCircle2, AlertCircle, ChevronRight, Trash2 } from 'lucide-react';
+import { X, Search, Plus, Minus, Download, User, Receipt, Calculator, Percent, Tag, CheckCircle2, AlertCircle, ChevronRight, Trash2, Truck } from 'lucide-react';
 import { collection, addDoc, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Product, DeliveryNote } from '../types';
@@ -24,6 +24,7 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
   const [aplicarTax, setAplicarTax] = useState(false);
   const [tipoDescuento, setTipoDescuento] = useState<'porcentaje' | 'monto_fijo'>('porcentaje');
   const [valorDescuento, setValorDescuento] = useState(0);
+  const [costoEnvio, setCostoEnvio] = useState(0);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,6 +36,7 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
       setAplicarTax(editNote.aplicarTax || false);
       setTipoDescuento(editNote.tipoDescuento || 'porcentaje');
       setValorDescuento(editNote.valorDescuento || 0);
+      setCostoEnvio(editNote.costoEnvio || 0);
       
       const items = editNote.items.map(item => {
         const product = products.find(p => p.id === item.productoId);
@@ -50,6 +52,7 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
       setObservaciones('');
       setAplicarTax(false);
       setValorDescuento(0);
+      setCostoEnvio(0);
       setStep('selection');
     }
   }, [editNote, products]);
@@ -67,7 +70,6 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
   }, [selectedItems]);
 
   const taxRate = 0.065;
-  const taxAmount = aplicarTax ? subtotal * taxRate : 0;
 
   const montoDescuento = useMemo(() => {
     if (tipoDescuento === 'porcentaje') {
@@ -76,7 +78,9 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
     return valorDescuento;
   }, [subtotal, tipoDescuento, valorDescuento]);
 
-  const total = subtotal + taxAmount - montoDescuento;
+  const taxAmount = aplicarTax ? (subtotal - montoDescuento) * taxRate : 0;
+
+  const total = subtotal - montoDescuento + taxAmount + (costoEnvio || 0);
 
   const toggleItem = (product: Product) => {
     setSelectedItems(prev => {
@@ -111,6 +115,7 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
         items: selectedItems.map(item => ({
           productoId: item.product.id,
           nombre: item.product.nombre,
+          codigo: item.product.codigo,
           cantidad: item.quantity,
           precioUnitario: item.product.precio || 0,
           subtotal: (item.product.precio || 0) * item.quantity
@@ -122,6 +127,7 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
         tipoDescuento,
         valorDescuento,
         montoDescuento,
+        costoEnvio,
         total,
         usuarioId: user.uid,
         observaciones,
@@ -488,6 +494,22 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
                             />
                           </div>
                         </div>
+
+                        <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
+                          <label className="text-slate-500 font-black text-[9px] uppercase tracking-widest block mb-3">Costo de Envío</label>
+                          <div className="flex items-center space-x-2">
+                             <div className="w-10 h-10 bg-black/40 rounded-lg flex items-center justify-center text-indigo-500 border border-white/5">
+                               <Truck size={14} />
+                             </div>
+                            <input
+                              type="number"
+                               value={costoEnvio || ''}
+                               onChange={(e) => setCostoEnvio(Number(e.target.value))}
+                              placeholder="0.00"
+                              className="flex-1 bg-transparent text-white font-black text-sm outline-none text-right"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -508,6 +530,12 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
                           <div className="flex justify-between items-center text-[10px] font-bold text-rose-500">
                             <span className="tracking-widest capitalize">DESCUENTO ({tipoDescuento === 'porcentaje' ? `${valorDescuento}%` : 'Monto'})</span>
                             <span className="tabular-nums">-${montoDescuento.toFixed(2)}</span>
+                          </div>
+                        )}
+                        {costoEnvio > 0 && (
+                          <div className="flex justify-between items-center text-[10px] font-bold text-emerald-400">
+                            <span className="tracking-widest capitalize">ENVÍO</span>
+                            <span className="tabular-nums">+${costoEnvio.toFixed(2)}</span>
                           </div>
                         )}
                         <div className="pt-4 mt-2 border-t border-white/10 flex flex-col items-end">

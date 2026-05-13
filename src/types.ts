@@ -69,6 +69,7 @@ export interface Promotion {
 export interface DeliveryNoteItem {
   productoId: string;
   nombre: string;
+  codigo?: string;
   cantidad: number;
   precioUnitario: number;
   subtotal: number;
@@ -87,6 +88,7 @@ export interface DeliveryNote {
   tipoDescuento: DeliveryDiscountType;
   valorDescuento: number;
   montoDescuento: number;
+  costoEnvio: number;
   total: number;
   usuarioId: string;
   observaciones?: string;

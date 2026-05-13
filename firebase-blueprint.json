@@ -109,6 +109,7 @@
         "tipoDescuento": { "enum": ["porcentaje", "monto_fijo"] },
         "valorDescuento": { "type": "number" },
         "montoDescuento": { "type": "number" },
+        "costoEnvio": { "type": "number" },
         "total": { "type": "number" },
         "usuarioId": { "type": "string" },
         "observaciones": { "type": "string" },

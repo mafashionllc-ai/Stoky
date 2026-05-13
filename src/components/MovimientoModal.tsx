@@ -58,7 +58,10 @@ export const MovementModal: React.FC<MovementModalProps> = ({ product, line, isO
           <div className="bg-[#24243E] p-4 rounded-2xl mb-8 flex items-center space-x-4">
             <span className="text-4xl">{product.emoji}</span>
             <div>
-              <h3 className="text-white font-bold text-lg">{product.nombre}</h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-white font-bold text-lg leading-tight">{product.nombre}</h3>
+                {product.codigo && <span className="text-[10px] font-black text-indigo-400/60 uppercase tracking-widest bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/20">#{product.codigo}</span>}
+              </div>
               <p className="text-sm font-black uppercase tracking-widest" style={{ color: line?.color || '#6366f1' }}>{line?.nombre || 'General'}</p>
               <p className="text-slate-400 text-xs mt-1">Stock actual: <span className="text-white font-bold">{product.stockActual}</span> uds</p>
             </div>

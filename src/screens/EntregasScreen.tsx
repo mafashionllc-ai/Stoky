@@ -81,25 +81,58 @@ export const EntregasScreen: React.FC = () => {
   };
 
   const handleShare = async (note: DeliveryNote) => {
-    const itemsText = note.items.map(item => `${item.cantidad}x ${item.nombre} - $${item.subtotal.toFixed(2)}`).join('\n');
-    const shareText = `Nota de Entrega: ${note.nroNota}\nCliente: ${note.receptor}\nFecha: ${formatDate(note.fecha)}\n\nProductos:\n${itemsText}\n\nTotal: $${note.total.toFixed(2)}\n${note.observaciones ? `\nObs: ${note.observaciones}` : ''}`;
+    const itemsText = note.items.map(item => `🔹 ${item.cantidad}x ${item.nombre.toUpperCase()} ${item.codigo ? `(#${item.codigo}) ` : ''}- $${item.subtotal.toFixed(2)}`).join('\n');
+    
+    // Recalcular tax si no existe o para asegurar consistencia
+    const taxRate = 0.065;
+    const currentTaxAmount = note.taxAmount !== undefined 
+      ? note.taxAmount 
+      : (note.aplicarTax ? (note.subtotal - note.montoDescuento) * taxRate : 0);
+
+    const details = [
+      `🔸 *SUBTOTAL:* $${note.subtotal.toFixed(2)}`,
+      note.montoDescuento > 0 ? `🔻 *DESCUENTO:* -$${note.montoDescuento.toFixed(2)}` : null,
+      currentTaxAmount > 0 ? `🔹 *TAX (6.5%):* +$${currentTaxAmount.toFixed(2)}` : null,
+      note.costoEnvio > 0 ? `🚚 *ENVÍO:* +$${note.costoEnvio.toFixed(2)}` : null,
+    ].filter(Boolean).join('\n');
+
+    const shareText = `🛍️ *VENTA FINAL - S PROFESSIONAL*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 *FECHA:* ${formatDate(note.fecha)}
+📝 *Nº NOTA:* ${note.nroNota}
+👤 *CLIENTE:* ${note.receptor.toUpperCase()}
+
+📦 *PRODUCTOS:*
+${itemsText}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+💵 *RESUMEN DE CUENTA:*
+${details}
+
+💰 *TOTAL A COBRAR: $${note.total.toFixed(2)}*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🏦 *MÉTODOS DE PAGO:*
+📌 *ZELLE:* MA Fashion LLC
+📱 *Teléfono:* 407 2181294
+
+✅ _Favor enviar comprobante del pago una vez realizado._
+🚀 _¡Gracias por elegir S Professional!_
+${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Nota de Entrega ${note.nroNota}`,
+          title: `Resumen de Entrega ${note.nroNota}`,
           text: shareText,
         });
       } catch (err) {
         console.error("Error sharing:", err);
+        // Fallback to WhatsApp direct if navigator.share fails or is not available
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
       }
     } else {
-      try {
-        await navigator.clipboard.writeText(shareText);
-        alert('Copiado al portapapeles');
-      } catch (err) {
-        console.error("Error copying:", err);
-      }
+      window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
     }
   };
 
@@ -157,7 +190,7 @@ export const EntregasScreen: React.FC = () => {
       
       if (!showArchived) {
         if (filter === 'pendiente') {
-          return !note.statusArmado && !note.statusEntregado && !note.statusCobrado;
+          return !note.statusArmado;
         }
         if (filter === 'por_entregar') {
           return !note.statusEntregado;
@@ -491,81 +524,96 @@ export const EntregasScreen: React.FC = () => {
                 </div>
               </div>
 
-              {/* Items - Scrollable area */}
-              <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar-light">
-                <table className="w-full">
-                  <thead className="border-b border-slate-100 sticky top-0 bg-white z-10">
-                    <tr>
-                      <th className="text-left py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">PRODUCTO</th>
-                      <th className="text-center py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">CANT</th>
-                      <th className="text-right py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">TOTAL</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
-                    {currentSelectedNote.items.map((item, i) => (
-                      <tr key={i}>
-                        <td className="py-4">
-                          <p className="text-slate-900 font-black text-xs uppercase whitespace-normal leading-tight mb-1">{item.nombre}</p>
-                          <p className="text-slate-400 font-bold text-[8px] uppercase">
-                            {lines.find(l => l.id === products.find(p => p.id === item.productoId)?.lineaId)?.nombre || 'General'}
-                          </p>
-                        </td>
-                        <td className="py-4 text-center">
-                          <span className="text-xs font-black text-slate-900">{item.cantidad}</span>
-                        </td>
-                        <td className="py-4 text-right">
-                          <p className="text-slate-900 font-black text-xs italic">${item.subtotal.toFixed(2)}</p>
-                        </td>
+              {/* Items & Totals - Scrollable area */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar-light flex flex-col">
+                <div className="p-6 md:p-8">
+                  <table className="w-full">
+                    <thead className="border-b border-slate-100 sticky top-0 bg-white z-10">
+                      <tr>
+                        <th className="text-left py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">PRODUCTO</th>
+                        <th className="text-center py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">CANT</th>
+                        <th className="text-right py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">TOTAL</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {currentSelectedNote.items.map((item, i) => (
+                        <tr key={i}>
+                          <td className="py-4">
+                            <div className="flex flex-col">
+                              <p className="text-slate-900 font-black text-xs uppercase whitespace-normal leading-tight">{item.nombre}</p>
+                              {item.codigo && <p className="text-indigo-600 font-black text-[9px] mt-0.5 tracking-widest">#{item.codigo}</p>}
+                              <p className="text-slate-400 font-bold text-[8px] uppercase mt-1">
+                                {lines.find(l => l.id === products.find(p => p.id === item.productoId)?.lineaId)?.nombre || 'General'}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="py-4 text-center">
+                            <span className="text-xs font-black text-slate-900">{item.cantidad}</span>
+                          </td>
+                          <td className="py-4 text-right">
+                            <p className="text-slate-900 font-black text-xs italic">${item.subtotal.toFixed(2)}</p>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
 
-                {currentSelectedNote.observaciones && (
-                  <div className="mt-8 p-5 bg-slate-50 rounded-[30px] border border-slate-100">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">NOTAS ADICIONALES</p>
-                    <p className="text-slate-600 text-xs font-medium italic">"{currentSelectedNote.observaciones}"</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Totals - Fixed at bottom */}
-              <div className="bg-slate-950 p-6 md:p-8 text-white shrink-0">
-                <div className="max-w-[280px] ml-auto space-y-2 mb-6">
-                  <div className="flex justify-between text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                    <span>SUBTOTAL</span>
-                    <span>${currentSelectedNote.subtotal.toFixed(2)}</span>
-                  </div>
-                  {((currentSelectedNote.taxAmount || 0) > 0) && (
-                    <div className="flex justify-between text-[9px] font-black text-emerald-400 uppercase tracking-widest">
-                      <span>TAX APLICADO</span>
-                      <span>+${currentSelectedNote.taxAmount.toFixed(2)}</span>
+                  {currentSelectedNote.observaciones && (
+                    <div className="mt-8 p-5 bg-slate-50 rounded-[30px] border border-slate-100">
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">NOTAS ADICIONALES</p>
+                      <p className="text-slate-600 text-xs font-medium italic">"{currentSelectedNote.observaciones}"</p>
                     </div>
                   )}
-                  {((currentSelectedNote.montoDescuento || 0) > 0) && (
-                    <div className="flex justify-between text-[9px] font-black text-rose-400 uppercase tracking-widest">
-                      <span>DESCUENTO</span>
-                      <span>-${currentSelectedNote.montoDescuento.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="pt-4 border-t border-slate-800 flex justify-between items-end">
-                    <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1.5">TOTAL NOTA</span>
-                    <span className="text-3xl font-black italic tracking-tighter">${currentSelectedNote.total.toFixed(2)}</span>
-                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 md:gap-4 pb-2 md:pb-0">
-                  <button className="bg-white/5 hover:bg-white/10 py-3 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all">
-                    <Printer size={16} />
-                    <span>Imprimir</span>
-                  </button>
-                  <button 
-                    onClick={() => handleShare(currentSelectedNote)}
-                    className="bg-indigo-600 hover:bg-indigo-500 py-3 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all shadow-xl shadow-indigo-600/20"
-                  >
-                    <Share2 size={16} />
-                    <span>Compartir</span>
-                  </button>
+                {/* Totals Section - Moved inside scrollable area */}
+                <div className="bg-slate-950 p-6 md:p-8 text-white mt-auto">
+                  <div className="max-w-[280px] ml-auto space-y-2 mb-6">
+                    <div className="flex justify-between text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                      <span>SUBTOTAL</span>
+                      <span>${currentSelectedNote.subtotal.toFixed(2)}</span>
+                    </div>
+
+                    {((currentSelectedNote.montoDescuento || 0) > 0) && (
+                      <div className="flex justify-between text-[9px] font-black text-rose-400 uppercase tracking-widest">
+                        <span>DESCUENTO</span>
+                        <span>-${currentSelectedNote.montoDescuento.toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    {((currentSelectedNote.taxAmount || 0) > 0) && (
+                      <div className="flex justify-between text-[9px] font-black text-indigo-400 uppercase tracking-widest">
+                        <span>TAX (6.5%)</span>
+                        <span>+${currentSelectedNote.taxAmount?.toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    {((currentSelectedNote.costoEnvio || 0) > 0) && (
+                      <div className="flex justify-between text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+                        <span>ENVÍO</span>
+                        <span>+${currentSelectedNote.costoEnvio.toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    <div className="pt-4 mt-2 border-t border-slate-800 flex justify-between items-end">
+                      <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1.5">TOTAL A COBRAR</span>
+                      <span className="text-3xl font-black italic tracking-tighter">${currentSelectedNote.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 md:gap-4 pb-2 md:pb-0">
+                    <button className="bg-white/5 hover:bg-white/10 py-3 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all">
+                      <Printer size={16} />
+                      <span>Imprimir</span>
+                    </button>
+                    <button 
+                      onClick={() => handleShare(currentSelectedNote)}
+                      className="bg-indigo-600 hover:bg-indigo-500 py-3 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all shadow-xl shadow-indigo-600/20"
+                    >
+                      <Share2 size={16} />
+                      <span>Compartir</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>

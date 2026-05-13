@@ -19,19 +19,26 @@ export const PromocionesScreen: React.FC = () => {
 
   const handleShare = (promo: Promotion) => {
     const productsList = promo.productos
-      .map(p => `• ${p.cantidad}x ${p.nombre}`)
+      .map(p => `🔹 ${p.cantidad}x ${p.nombre.toUpperCase()}`)
       .join('\n');
 
     const message = `🔥 *PROMOCIÓN ESPECIAL: ${promo.nombre.toUpperCase()}* 🔥
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+¡Aprovecha esta oferta por tiempo limitado!
 
-¡No te pierdas esta oferta increíble!
-
-📦 *Incluye:*
+📦 *INCLUYE:*
 ${productsList}
 
-💰 *Precio Regular:* $${promo.subtotalRegular.toFixed(2)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+💵 *PRECIO ESPECIAL:*
+🔸 Precio Regular: $${promo.subtotalRegular.toFixed(2)}
 ✨ *PRECIO PROMO:* *$${promo.totalFinal.toFixed(2)}*
-📉 *Ahorras:* $${(promo.subtotalRegular - promo.totalFinal).toFixed(2)} (${((1 - promo.totalFinal / promo.subtotalRegular) * 100).toFixed(0)}% OFF)
+📉 *AHORRAS:* $${(promo.subtotalRegular - promo.totalFinal).toFixed(2)} (${((1 - promo.totalFinal / promo.subtotalRegular) * 100).toFixed(0)}% OFF)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏦 *MÉTODOS DE PAGO:*
+📌 *ZELE:* MA Fashion LLC
+📱 *Número:* 407 2181294
 
 🚀 ¡Pide la tuya ahora mismo!
 _MA Fashion - S Professional_`;

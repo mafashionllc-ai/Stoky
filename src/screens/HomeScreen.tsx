@@ -148,7 +148,7 @@ export const HomeScreen: React.FC = () => {
       </div>
 
       {/* Products List */}
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-3">
         <AnimatePresence mode="popLayout">
           {filteredProducts.map((product) => {
             const line = lines.find(l => l.id === product.lineaId);
