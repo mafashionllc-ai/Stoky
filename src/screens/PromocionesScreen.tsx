@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../AppContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { Tag, Plus, Trash2, ShoppingBag, Edit2 } from 'lucide-react';
+import { Tag, Plus, Trash2, ShoppingBag, Edit2, Share2, MessageSquareText } from 'lucide-react';
 import { deletePromotion } from '../services/firestoreService';
 import { AdminPromotionModal } from '../components/AdminPromotionModal';
 import { Promotion } from '../types';
@@ -15,6 +15,29 @@ export const PromocionesScreen: React.FC = () => {
   const handleEdit = (promo: Promotion) => {
     setPromotionToEdit(promo);
     setIsAdminModalOpen(true);
+  };
+
+  const handleShare = (promo: Promotion) => {
+    const productsList = promo.productos
+      .map(p => `• ${p.cantidad}x ${p.nombre}`)
+      .join('\n');
+
+    const message = `🔥 *PROMOCIÓN ESPECIAL: ${promo.nombre.toUpperCase()}* 🔥
+
+¡No te pierdas esta oferta increíble!
+
+📦 *Incluye:*
+${productsList}
+
+💰 *Precio Regular:* $${promo.subtotalRegular.toFixed(2)}
+✨ *PRECIO PROMO:* *$${promo.totalFinal.toFixed(2)}*
+📉 *Ahorras:* $${(promo.subtotalRegular - promo.totalFinal).toFixed(2)} (${((1 - promo.totalFinal / promo.subtotalRegular) * 100).toFixed(0)}% OFF)
+
+🚀 ¡Pide la tuya ahora mismo!
+_MA Fashion - S Professional_`;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
   };
 
   const handleCreate = () => {
@@ -86,6 +109,13 @@ export const PromocionesScreen: React.FC = () => {
                 </div>
               </div>
               <div className="flex space-x-2">
+                <button 
+                  onClick={() => handleShare(promo)}
+                  className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all shadow-lg shadow-emerald-500/10"
+                  title="Compartir por WhatsApp"
+                >
+                  <MessageSquareText size={16} />
+                </button>
                 <button 
                   onClick={() => handleEdit(promo)}
                   className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
