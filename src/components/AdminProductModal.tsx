@@ -136,7 +136,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest pl-2">Información Básica</p>
+                  <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Información Básica</p>
                   <input 
                     value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Nombre del producto"
                     className="w-full bg-[#24243E] border-none py-4 px-6 rounded-2xl text-white font-bold outline-none focus:ring-2 focus:ring-indigo-600"
@@ -162,7 +162,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
 
                 <div className="grid grid-cols-2 gap-4">
                    <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest pl-2">Precio de Venta ($)</p>
+                    <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Precio de Venta ($)</p>
                     <div className="relative">
                       <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16}/>
                       <input 
@@ -172,7 +172,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest pl-2">Costo Pro (KPI) ($)</p>
+                    <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Costo Pro (KPI) ($)</p>
                     <div className="relative">
                       <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500" size={16}/>
                       <input 
@@ -185,7 +185,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest pl-2">Stock Inicial</p>
+                    <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Stock Inicial</p>
                     <div className="relative">
                       <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16}/>
                       <input 
@@ -198,23 +198,23 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest pl-2">Uso del Producto</p>
+                  <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Uso del Producto</p>
                   <div className="flex bg-[#24243E] p-1 rounded-2xl relative shadow-inner">
                     <button
                       onClick={() => setTipo('cabina')}
-                      className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest z-10 transition-colors ${tipo === 'cabina' ? 'text-white' : 'text-gray-500'}`}
+                      className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest z-10 transition-colors ${tipo === 'cabina' ? 'text-white' : 'text-gray-500'}`}
                     >
                       Profesional
                     </button>
                     <button
                       onClick={() => setTipo('after_care')}
-                      className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest z-10 transition-colors ${tipo === 'after_care' ? 'text-white' : 'text-gray-500'}`}
+                      className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest z-10 transition-colors ${tipo === 'after_care' ? 'text-white' : 'text-gray-500'}`}
                     >
                       Home Care
                     </button>
                     <button
                       onClick={() => setTipo('ambos')}
-                      className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest z-10 transition-colors ${tipo === 'ambos' ? 'text-white' : 'text-gray-500'}`}
+                      className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest z-10 transition-colors ${tipo === 'ambos' ? 'text-white' : 'text-gray-500'}`}
                     >
                       Mixto
                     </button>
@@ -229,7 +229,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest pl-2">Alerta Stock Bajo</p>
+                  <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Alerta Stock Bajo</p>
                   <input 
                     type="number" value={stockMinimo} onChange={e => setStockMinimo(e.target.value)} placeholder="Mínimo sugerido"
                     className="w-full bg-[#24243E] border-none py-4 px-6 rounded-2xl text-white font-bold outline-none focus:ring-2 focus:ring-indigo-600"
@@ -263,7 +263,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                 {showConfirmDelete && (
                   <button 
                     onClick={() => setShowConfirmDelete(false)}
-                    className="w-full text-gray-500 font-bold py-2 text-[10px] uppercase tracking-widest"
+                    className="w-full text-gray-500 font-bold py-2 text-xs uppercase tracking-widest"
                   >
                     Cancelar
                   </button>

@@ -54,7 +54,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <span className="text-xl sm:text-3xl transition-all mb-0.5 sm:mb-1">
             {line?.emoji || '✨'}
           </span>
-          <span className="text-[6px] sm:text-[7px] font-black tracking-widest uppercase opacity-40 truncate max-w-full text-center hidden sm:block" style={{ color: lineThemeColor }}>
+          <span className="text-xs sm:text-sm font-black tracking-widest uppercase opacity-40 truncate max-w-full text-center hidden sm:block" style={{ color: lineThemeColor }}>
              {line?.nombre || 'Gral'}
           </span>
         </div>
@@ -68,24 +68,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <div className="flex items-center space-x-2 sm:space-x-3">
              <div className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-md ${typeColor}`}>
                 <span className="scale-75 sm:scale-100 -ml-0.5 sm:ml-0">{typeIcon}</span>
-                <span className="text-[6px] sm:text-[7px] font-black tracking-widest uppercase hidden sm:inline">{typeLabel}</span>
+                <span className="text-xs sm:text-sm font-black tracking-widest uppercase hidden sm:inline">{typeLabel}</span>
              </div>
-             {product.codigo && <span className="text-[8px] sm:text-[9px] text-gray-500 font-medium tracking-widest uppercase">#{product.codigo}</span>}
+             {product.codigo && <span className="text-xs sm:text-sm text-gray-500 font-medium tracking-widest uppercase">#{product.codigo}</span>}
           </div>
         </div>
 
         {/* Right: Prices & Stock */}
         <div className="flex items-center space-x-3 sm:space-x-8">
           <div className="flex flex-col items-end">
-            <span className="text-white text-[11px] sm:text-sm font-medium italic opacity-95 tracking-tighter">${product.precio?.toFixed(2)}</span>
-            <span className="text-emerald-500/50 text-[8px] sm:text-[10px] font-medium italic tracking-tighter">${product.costo?.toFixed(2)}</span>
+            <span className="text-white text-sm sm:text-base font-medium italic opacity-95 tracking-tighter">${product.precio?.toFixed(2)}</span>
+            <span className="text-emerald-500/50 text-xs sm:text-[13px] font-medium italic tracking-tighter">${product.costo?.toFixed(2)}</span>
           </div>
           
           <div className="flex flex-col items-center min-w-[28px] sm:min-w-[36px]">
-            <span className={`text-[15px] sm:text-xl font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}`}>
+            <span className="text-[16px] sm:text-xl font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}">
               {product.stockActual}
             </span>
-            <span className="text-[6px] sm:text-[7px] text-gray-600 uppercase font-black tracking-tighter mt-0.5 hidden sm:block">unid</span>
+            <span className="text-xs sm:text-sm text-gray-600 uppercase font-black tracking-tighter mt-0.5 hidden sm:block">unid</span>
           </div>
 
           <div className="hidden sm:block">

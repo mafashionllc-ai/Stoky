@@ -37,19 +37,19 @@ export const MovimientosScreen: React.FC = () => {
       <div className="flex space-x-2 mb-5">
         <button 
           onClick={() => setFilterType('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'all' ? 'bg-[#6C63FF] text-white' : 'bg-[#24243E] text-slate-400'}`}
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${filterType === 'all' ? 'bg-[#6C63FF] text-white' : 'bg-[#24243E] text-slate-400'}`}
         >
           TODOS
         </button>
         <button 
           onClick={() => setFilterType('egreso')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'egreso' ? 'bg-[#f43f5e] text-white shadow-lg shadow-rose-500/20' : 'bg-[#24243E] text-slate-400'}`}
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${filterType === 'egreso' ? 'bg-[#f43f5e] text-white shadow-lg shadow-rose-500/20' : 'bg-[#24243E] text-slate-400'}`}
         >
           EGRESOS
         </button>
         <button 
           onClick={() => setFilterType('ingreso')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterType === 'ingreso' ? 'bg-[#10B981] text-white shadow-lg shadow-emerald-500/20' : 'bg-[#24243E] text-slate-400'}`}
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${filterType === 'ingreso' ? 'bg-[#10B981] text-white shadow-lg shadow-emerald-500/20' : 'bg-[#24243E] text-slate-400'}`}
         >
           INGRESOS
         </button>
@@ -91,7 +91,7 @@ export const MovimientosScreen: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-bold">{product?.nombre || 'Producto eliminado'}</h4>
-                  <p className="text-slate-400 text-[10px] uppercase font-bold flex items-center">
+                  <p className="text-slate-400 text-xs uppercase font-bold flex items-center">
                     <Clock size={10} className="mr-1" />
                     {format(date, "d MMM, HH:mm", { locale: es })}
                   </p>
@@ -102,7 +102,7 @@ export const MovimientosScreen: React.FC = () => {
                 <p className={`text-xl font-black ${move.tipo === 'ingreso' ? 'text-[#10B981]' : 'text-[#F59E0B]'}`}>
                   {move.tipo === 'ingreso' ? '+' : '-'}{move.cantidad}
                 </p>
-                <p className="text-slate-500 text-[10px] font-bold">STOCK: {move.stockNuevo}</p>
+                <p className="text-slate-500 text-xs font-bold">STOCK: {move.stockNuevo}</p>
               </div>
             </motion.div>
           );

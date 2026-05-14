@@ -170,7 +170,7 @@ export const ReportesScreen: React.FC = () => {
         </div>
         <button 
           onClick={exportToExcel}
-          className="flex items-center space-x-2 bg-emerald-500 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-all font-black text-[10px] tracking-widest uppercase"
+          className="flex items-center space-x-2 bg-emerald-500 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-all font-black text-xs tracking-widest uppercase"
         >
           <Download size={16} />
           <span>DESCARGAR EXCEL</span>
@@ -188,7 +188,7 @@ export const ReportesScreen: React.FC = () => {
                 if (f === 'personalizado') setShowCustomPicker(true);
                 else setShowCustomPicker(false);
               }}
-              className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-tighter transition-all ${
                 timeFilter === f ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:bg-white/5'
               }`}
             >
@@ -213,7 +213,7 @@ export const ReportesScreen: React.FC = () => {
           className="bg-[#24243E] p-4 rounded-3xl border border-white/5 mb-6 grid grid-cols-2 gap-3"
         >
           <div>
-            <label className="text-[8px] font-black uppercase text-slate-500 mb-1 block">Desde</label>
+            <label className="text-[10px] font-black uppercase text-slate-500 mb-1 block">Desde</label>
             <input 
               type="date" 
               value={customRange.start}
@@ -222,7 +222,7 @@ export const ReportesScreen: React.FC = () => {
             />
           </div>
           <div>
-            <label className="text-[8px] font-black uppercase text-slate-500 mb-1 block">Hasta</label>
+            <label className="text-[10px] font-black uppercase text-slate-500 mb-1 block">Hasta</label>
             <input 
               type="date" 
               value={customRange.end}
@@ -251,11 +251,11 @@ export const ReportesScreen: React.FC = () => {
         
         <div className="flex items-center justify-end space-x-6 mb-6">
           <div className="text-center">
-            <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Salidas</p>
+            <p className="text-[10px] text-slate-500 font-black uppercase mb-1">Salidas</p>
             <p className="text-xs font-black text-rose-500">{timelineData.reduce((acc, d) => acc + d.egresos, 0)}</p>
           </div>
           <div className="text-center">
-            <p className="text-[8px] text-slate-500 font-black uppercase mb-1">Entradas</p>
+            <p className="text-[10px] text-slate-500 font-black uppercase mb-1">Entradas</p>
             <p className="text-xs font-black text-emerald-500">{timelineData.reduce((acc, d) => acc + d.ingresos, 0)}</p>
           </div>
         </div>
@@ -266,14 +266,14 @@ export const ReportesScreen: React.FC = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
               <XAxis 
                 dataKey="date" 
-                tick={{ fill: '#94A3B8', fontSize: 9 }} 
+                tick={{ fill: '#94A3B8', fontSize: 11 }} 
                 axisLine={false} 
                 tickLine={false}
                 interval={timelineData.length > 10 ? Math.floor(timelineData.length / 5) : 0}
               />
-              <YAxis tick={{ fill: '#94A3B8', fontSize: 9 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#1A1A2E', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '10px' }}
+                contentStyle={{ backgroundColor: '#1A1A2E', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '12px' }}
                 itemStyle={{ padding: '0px' }}
               />
               <Line type="monotone" dataKey="ingresos" stroke="#10B981" strokeWidth={3} dot={false} activeDot={{ r: 4 }} />
@@ -299,11 +299,11 @@ export const ReportesScreen: React.FC = () => {
                 <div className="p-2 rounded-xl" style={{ backgroundColor: `${metric.color}15`, color: metric.color }}>
                   <Icon size={20} />
                 </div>
-                <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest leading-none">{metric.label}</span>
+                <span className="text-slate-400 text-xs font-black uppercase tracking-widest leading-none">{metric.label}</span>
               </div>
               <p className="text-3xl font-black text-white">{metric.value}</p>
               {(metric as any).helper && (
-                <p className="text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-tight">{(metric as any).helper}</p>
+                <p className="text-[11px] text-emerald-500 font-bold mt-1 uppercase tracking-tight">{(metric as any).helper}</p>
               )}
             </motion.div>
           );
@@ -330,15 +330,15 @@ export const ReportesScreen: React.FC = () => {
 
               <div className="grid grid-cols-3 gap-2">
                 <div className="bg-[#1A1A2E] p-3 rounded-2xl border border-white/5">
-                  <p className="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Profesional</p>
+                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Profesional</p>
                   <p className="text-sm font-black text-white">${line.cabin.toLocaleString()}</p>
                 </div>
                 <div className="bg-[#1A1A2E] p-3 rounded-2xl border border-white/5">
-                  <p className="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Home Care</p>
+                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Home Care</p>
                   <p className="text-sm font-black text-white">${line.home.toLocaleString()}</p>
                 </div>
                 <div className="bg-[#1A1A2E] p-3 rounded-2xl border border-white/5">
-                  <p className="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Mixto</p>
+                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Mixto</p>
                   <p className="text-sm font-black text-white">${line.ambos.toLocaleString()}</p>
                 </div>
               </div>
@@ -383,7 +383,7 @@ export const ReportesScreen: React.FC = () => {
                 <span className="text-2xl">{p.emoji}</span>
                 <div>
                   <h4 className="text-white font-bold text-sm truncate w-40">{p.nombre}</h4>
-                  <p className="text-red-500 text-[10px] font-bold">Mínimo: {p.stockMinimo} / Actual: {p.stockActual}</p>
+                  <p className="text-red-500 text-xs font-bold">Mínimo: {p.stockMinimo} / Actual: {p.stockActual}</p>
                 </div>
               </div>
               <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">

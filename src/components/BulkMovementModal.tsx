@@ -80,7 +80,7 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
             <div className="p-6 pb-2 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-black text-white italic tracking-tighter uppercase">MOVIMIENTO MASIVO</h2>
-                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Ajuste de {selectedProducts.length} productos</p>
+                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Ajuste de {selectedProducts.length} productos</p>
               </div>
               <button 
                 onClick={onClose} 
@@ -125,7 +125,7 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
                     <span className="text-2xl">{product.emoji}</span>
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-white leading-tight line-clamp-1">{product.nombre}</h4>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{product.stockActual} en stock</p>
+                      <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">{product.stockActual} en stock</p>
                     </div>
                     <div className="flex items-center space-x-3">
                       <button 
@@ -153,7 +153,7 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
 
               {/* Note */}
               <div className="space-y-2">
-                <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest pl-2">Nota (Opcional)</p>
+                <p className="text-xs text-gray-500 font-black uppercase tracking-widest pl-2">Nota (Opcional)</p>
                 <textarea
                   value={nota}
                   onChange={(e) => setNota(e.target.value)}
@@ -163,7 +163,7 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
               </div>
 
               {error && (
-                <div className="text-red-400 text-[10px] font-bold uppercase text-center bg-red-400/10 p-2 rounded-lg">
+                <div className="text-red-400 text-xs font-bold uppercase text-center bg-red-400/10 p-2 rounded-lg">
                   {error}
                 </div>
               )}

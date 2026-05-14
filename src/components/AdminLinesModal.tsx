@@ -117,7 +117,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                 </div>
                 <div>
                   <h2 className="text-xl font-black text-white italic tracking-tighter">GESTIÓN DE LÍNEAS</h2>
-                  <p className="text-[10px] text-indigo-400/60 font-black tracking-widest uppercase">Personaliza tu catálogo</p>
+                  <p className="text-xs text-indigo-400/60 font-black tracking-widest uppercase">Personaliza tu catálogo</p>
                 </div>
               </div>
               <button 
@@ -132,7 +132,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
               {/* Form Section */}
               <div className="bg-[#24243E] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
                 <div className="bg-gradient-to-r from-indigo-600/10 to-transparent p-4 border-b border-white/5">
-                  <p className="text-[10px] font-black uppercase text-indigo-400 tracking-[0.2em]">
+                  <p className="text-xs font-black uppercase text-indigo-400 tracking-[0.2em]">
                     {editingLine ? 'Editando Línea' : 'Nueva Línea de Tratamiento'}
                   </p>
                 </div>
@@ -141,7 +141,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                   {/* Basic Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest ml-2 flex items-center">
+                      <label className="text-xs font-black uppercase text-gray-500 tracking-widest ml-2 flex items-center">
                         <Smile size={12} className="mr-1 opacity-50" /> Nombre
                       </label>
                       <input 
@@ -152,7 +152,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest ml-2 flex items-center">
+                      <label className="text-xs font-black uppercase text-gray-500 tracking-widest ml-2 flex items-center">
                         <Hash size={12} className="mr-1 opacity-50" /> Orden
                       </label>
                       <input 
@@ -166,7 +166,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest ml-2 flex items-center">
+                    <label className="text-xs font-black uppercase text-gray-500 tracking-widest ml-2 flex items-center">
                       <AlignLeft size={12} className="mr-1 opacity-50" /> Descripción Corta
                     </label>
                     <textarea 
@@ -180,7 +180,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest ml-2">Color de Marca</label>
+                      <label className="text-xs font-black uppercase text-gray-500 tracking-widest ml-2">Color de Marca</label>
                       <div className="flex items-center space-x-3 bg-[#1A1A2E] p-3 rounded-2xl">
                         <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-inner border border-white/10">
                           <input 
@@ -193,13 +193,13 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                         <input 
                           value={color.toUpperCase()} 
                           onChange={e => setColor(e.target.value)}
-                          className="bg-transparent border-none text-xs font-mono text-gray-400 outline-none w-20"
+                          className="bg-transparent border-none text-sm font-mono text-gray-400 outline-none w-20"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest ml-2">Estado</label>
+                      <label className="text-xs font-black uppercase text-gray-500 tracking-widest ml-2">Estado</label>
                       <button 
                         onClick={() => setIsActive(!isActive)}
                         className={`w-full flex items-center space-x-3 p-3 rounded-2xl transition-all ${isActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}
@@ -207,14 +207,14 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
                           <CheckCircle2 size={18} />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest">{isActive ? 'ACTIVA' : 'INACTIVA'}</span>
+                        <span className="text-xs font-black uppercase tracking-widest">{isActive ? 'ACTIVA' : 'INACTIVA'}</span>
                       </button>
                     </div>
                   </div>
                   
                   <div className="space-y-4">
                     <div className="flex justify-between items-center px-2">
-                      <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest">Icono de la Línea</p>
+                      <p className="text-xs font-black uppercase text-gray-500 tracking-widest">Icono de la Línea</p>
                       <div className="px-3 py-1 bg-white/5 rounded-full flex items-center space-x-2">
                         <span className="text-2xl">{emoji}</span>
                       </div>
@@ -236,7 +236,7 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                     {editingLine && (
                       <button 
                         onClick={reset} 
-                        className="flex-1 bg-white/5 hover:bg-white/10 text-gray-400 font-black py-5 rounded-2xl uppercase tracking-widest text-[10px] transition-colors"
+                        className="flex-1 bg-white/5 hover:bg-white/10 text-gray-400 font-black py-5 rounded-2xl uppercase tracking-widest text-xs transition-colors"
                       >
                         Descartar
                       </button>
@@ -256,8 +256,8 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
               {/* List Section */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
-                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest">Catálogo de Líneas ({lines.length})</p>
-                  <p className="text-[10px] font-black uppercase text-indigo-400/60 tracking-widest">Ordenadas por prioridad</p>
+                  <p className="text-xs font-black uppercase text-gray-500 tracking-widest">Catálogo de Líneas ({lines.length})</p>
+                  <p className="text-xs font-black uppercase text-indigo-400/60 tracking-widest">Ordenadas por prioridad</p>
                 </div>
                 
                 <div className="grid grid-cols-1 gap-3">
@@ -272,16 +272,16 @@ export const AdminLinesModal: React.FC<AdminLinesModalProps> = ({ isOpen, onClos
                           <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-3xl shadow-inner group-hover:scale-110 transition-transform">
                             {line.emoji}
                           </div>
-                          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#1A1A2E] flex items-center justify-center text-[10px] font-bold text-gray-500 border border-white/10">
+                          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#1A1A2E] flex items-center justify-center text-xs font-bold text-gray-500 border border-white/10">
                             {line.orden}
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2">
                             <h4 className="text-sm font-black text-white uppercase tracking-tight truncate">{line.nombre}</h4>
-                            {!line.activa && <span className="text-[8px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">OCULTA</span>}
+                            {!line.activa && <span className="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">OCULTA</span>}
                           </div>
-                          {line.descripcion && <p className="text-[10px] text-gray-500 font-medium line-clamp-1 mb-1">{line.descripcion}</p>}
+                          {line.descripcion && <p className="text-xs text-gray-500 font-medium line-clamp-1 mb-1">{line.descripcion}</p>}
                           <div className="w-16 h-1 rounded-full overflow-hidden bg-white/5 mt-1">
                             <div className="h-full" style={{ backgroundColor: line.color, width: '100%' }} />
                           </div>

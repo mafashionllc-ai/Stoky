@@ -224,11 +224,11 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
           <h1 className="text-3xl font-black text-white tracking-widest uppercase italic bg-gradient-to-r from-emerald-500 to-indigo-500 bg-clip-text text-transparent">
             ENTREGAS
           </h1>
-          <p className="text-slate-500 text-[10px] font-black tracking-[0.2em] uppercase mt-1">Notas de Entrega e Inventario</p>
+          <p className="text-slate-500 text-xs font-black tracking-[0.2em] uppercase mt-1">Notas de Entrega e Inventario</p>
         </div>
         <button 
           onClick={handleOpenNewNote}
-          className="flex items-center space-x-2 bg-emerald-500 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-all font-black text-[10px] tracking-widest uppercase active:scale-95"
+          className="flex items-center space-x-2 bg-emerald-500 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition-all font-black text-xs tracking-widest uppercase active:scale-95"
         >
           <Plus size={16} />
           <span>NUEVA NOTA</span>
@@ -245,7 +245,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
           placeholder="BUSCAR POR RECEPTOR O Nº DE NOTA..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full bg-[#24243E] rounded-[30px] py-5 pl-14 pr-6 text-white text-xs font-black uppercase tracking-[0.1em] focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all border border-white/5 shadow-xl"
+          className="w-full bg-[#24243E] rounded-[30px] py-5 pl-14 pr-6 text-white text-sm font-black uppercase tracking-[0.1em] focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all border border-white/5 shadow-xl"
         />
       </div>
 
@@ -256,7 +256,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
             setShowArchived(!showArchived);
             setFilter('all'); // Reset status filter when switching view
           }}
-          className={`flex items-center space-x-3 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shrink-0 border ${
+          className={`flex items-center space-x-3 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shrink-0 border ${
             showArchived 
               ? 'bg-amber-500 text-white border-amber-500 shadow-xl shadow-amber-500/30' 
               : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10'
@@ -264,7 +264,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
         >
           {showArchived ? <ArchiveRestore size={14} className="animate-pulse" /> : <Archive size={14} />}
           <span>{showArchived ? 'MOSTRAR NOTAS ACTIVAS' : 'MOSTRAR ARCHIVADAS'}</span>
-          <div className="bg-black/20 px-2 py-0.5 rounded-lg text-[9px] ml-1">
+          <div className="bg-black/20 px-2 py-0.5 rounded-lg text-[11px] ml-1">
             {deliveryNotes.filter(n => !!n.archived === !showArchived).length}
           </div>
         </button>
@@ -282,7 +282,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
               <button
                 key={btn.id}
                 onClick={() => setFilter(btn.id as any)}
-                className={`flex items-center space-x-2 px-5 py-3 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all shrink-0 border ${
+                className={`flex items-center space-x-2 px-5 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all shrink-0 border ${
                   filter === btn.id 
                     ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20' 
                     : 'bg-white/5 text-slate-500 border-white/5 hover:bg-white/10'
@@ -291,7 +291,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                 <btn.icon size={12} />
                 <span>{btn.label}</span>
                 {filter === btn.id && (
-                  <span className="bg-white/20 px-1.5 py-0.5 rounded-lg text-[8px] ml-1">
+                  <span className="bg-white/20 px-1.5 py-0.5 rounded-lg text-[10px] ml-1">
                     {filteredNotes.length}
                   </span>
                 )}
@@ -322,7 +322,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-black text-emerald-500 tracking-[0.2em] uppercase mb-1">{note.nroNota}</span>
+                    <span className="text-xs font-black text-emerald-500 tracking-[0.2em] uppercase mb-1">{note.nroNota}</span>
                     <h3 className="text-white font-black text-lg uppercase leading-none tracking-tight truncate max-w-[180px]">
                       {note.receptor}
                     </h3>
@@ -330,7 +330,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                     <div className="flex items-start space-x-3">
                       <div className="text-right">
                         <p className="text-white font-black text-2xl italic tracking-tighter leading-none">${note.total.toFixed(2)}</p>
-                        <p className="text-slate-500 text-[8px] font-bold uppercase mt-1">Total Nota</p>
+                        <p className="text-slate-500 text-[10px] font-bold uppercase mt-1">Total Nota</p>
                       </div>
                       <div className="flex flex-col space-y-2">
                         <button 
@@ -362,14 +362,14 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                       </div>
                     ))}
                     {note.items.length > 3 && (
-                      <div className="w-10 h-10 rounded-2xl bg-emerald-500 border-2 border-[#1E1E35] flex items-center justify-center text-[10px] font-black text-white shrink-0">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-500 border-2 border-[#1E1E35] flex items-center justify-center text-xs font-black text-white shrink-0">
                         +{note.items.length - 3}
                       </div>
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-white font-black text-xs leading-none">{note.items.length} PRODUCTOS</p>
-                    <p className="text-slate-500 text-[9px] font-bold uppercase mt-1">{formatDate(note.fecha)}</p>
+                    <p className="text-white font-black text-sm leading-none">{note.items.length} PRODUCTOS</p>
+                    <p className="text-slate-500 text-[11px] font-bold uppercase mt-1">{formatDate(note.fecha)}</p>
                   </div>
                 </div>
 
@@ -379,27 +379,27 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                     className={`flex-1 flex items-center justify-center space-x-1 py-2 rounded-xl border transition-all ${note.statusArmado ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400' : 'bg-white/5 border-white/5 text-slate-500'}`}
                   >
                     <Package size={12} className={note.statusArmado ? 'text-indigo-400' : 'text-slate-600'} />
-                    <span className="text-[8px] font-black uppercase tracking-tighter">Armado</span>
+                    <span className="text-[10px] font-black uppercase tracking-tighter">Armado</span>
                   </button>
                   <button 
                     onClick={(e) => { e.stopPropagation(); toggleNoteStatus(note.id, 'statusEntregado', !!note.statusEntregado); }}
                     className={`flex-1 flex items-center justify-center space-x-1 py-2 rounded-xl border transition-all ${note.statusEntregado ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/5 text-slate-500'}`}
                   >
                     <Truck size={12} className={note.statusEntregado ? 'text-emerald-400' : 'text-slate-600'} />
-                    <span className="text-[8px] font-black uppercase tracking-tighter">Entregado</span>
+                    <span className="text-[10px] font-black uppercase tracking-tighter">Entregado</span>
                   </button>
                   <button 
                     onClick={(e) => { e.stopPropagation(); toggleNoteStatus(note.id, 'statusCobrado', !!note.statusCobrado); }}
                     className={`flex-1 flex items-center justify-center space-x-1 py-2 rounded-xl border transition-all ${note.statusCobrado ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-white/5 border-white/5 text-slate-500'}`}
                   >
                     <DollarSign size={12} className={note.statusCobrado ? 'text-amber-400' : 'text-slate-600'} />
-                    <span className="text-[8px] font-black uppercase tracking-tighter">Cobrado</span>
+                    <span className="text-[10px] font-black uppercase tracking-tighter">Cobrado</span>
                   </button>
                 </div>
 
                 <div className="pt-5 border-t border-white/5 flex items-center justify-between">
                   <div className="bg-white/5 px-4 py-2 rounded-full">
-                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Ver Detalle</span>
+                    <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Ver Detalle</span>
                   </div>
                   <ChevronRight size={18} className="text-slate-600 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
                 </div>
@@ -452,19 +452,19 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-slate-900 font-black text-2xl tracking-tighter uppercase italic leading-none">NOTA <span className="text-indigo-600">DETALLE</span></h3>
-                    <p className="text-slate-400 text-[10px] font-black tracking-widest mt-1">Nº {currentSelectedNote.nroNota}</p>
+                    <p className="text-slate-400 text-xs font-black tracking-widest mt-1">Nº {currentSelectedNote.nroNota}</p>
                   </div>
                   <div className="flex items-center space-x-2 md:space-x-3">
                     <button 
                       onClick={(e) => handleArchiveNote(e, currentSelectedNote)}
-                      className={`flex items-center space-x-2 px-3 md:px-4 py-2 border rounded-xl transition-all font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm ${currentSelectedNote.archived ? 'bg-amber-50 border-amber-100 text-amber-600 hover:bg-amber-600 hover:text-white' : 'bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}
+                      className={`flex items-center space-x-2 px-3 md:px-4 py-2 border rounded-xl transition-all font-black text-xs md:text-sm uppercase tracking-widest shadow-sm ${currentSelectedNote.archived ? 'bg-amber-50 border-amber-100 text-amber-600 hover:bg-amber-600 hover:text-white' : 'bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}
                     >
                       {currentSelectedNote.archived ? <ArchiveRestore size={14} /> : <Archive size={14} />}
                       <span className="hidden sm:inline">{currentSelectedNote.archived ? 'Restaurar' : 'Archivar'}</span>
                     </button>
                     <button 
                       onClick={() => handleEditNote(currentSelectedNote)}
-                      className="flex items-center space-x-2 px-3 md:px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm"
+                      className="flex items-center space-x-2 px-3 md:px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all font-black text-xs md:text-sm uppercase tracking-widest shadow-sm"
                       title="Editar Nota"
                     >
                       <Edit size={14} />
@@ -472,7 +472,7 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                     </button>
                     <button 
                       onClick={() => setNoteToDelete(currentSelectedNote)}
-                      className="flex items-center space-x-2 px-3 md:px-4 py-2 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 hover:bg-rose-600 hover:text-white transition-all font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm"
+                      className="flex items-center space-x-2 px-3 md:px-4 py-2 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 hover:bg-rose-600 hover:text-white transition-all font-black text-xs md:text-sm uppercase tracking-widest shadow-sm"
                       title="Eliminar Nota"
                     >
                       <Trash2 size={14} />
@@ -489,12 +489,12 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
 
                 <div className="grid grid-cols-2 gap-4 md:gap-8">
                   <div>
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 block">RECEPTOR</label>
-                    <p className="text-slate-900 font-black text-sm uppercase truncate">{currentSelectedNote.receptor}</p>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1 block">RECEPTOR</label>
+                    <p className="text-slate-900 font-black text-lg uppercase truncate">{currentSelectedNote.receptor}</p>
                   </div>
                   <div className="text-right">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 block">FECHA</label>
-                    <p className="text-slate-900 font-black text-[10px] md:text-xs uppercase whitespace-nowrap">{formatDate(currentSelectedNote.fecha)}</p>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1 block">FECHA</label>
+                    <p className="text-slate-900 font-black text-sm md:text-base uppercase whitespace-nowrap">{formatDate(currentSelectedNote.fecha)}</p>
                   </div>
                 </div>
 
@@ -504,22 +504,22 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                     onClick={() => toggleNoteStatus(currentSelectedNote.id, 'statusArmado', !!currentSelectedNote.statusArmado)}
                     className={`flex-1 flex items-center justify-center space-x-1.5 py-2.5 rounded-xl transition-all ${currentSelectedNote.statusArmado ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
                   >
-                    {currentSelectedNote.statusArmado ? <CheckCircle2 size={14} /> : <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-300" />}
-                    <span className="text-[9px] font-black uppercase tracking-widest">Armado</span>
+                    {currentSelectedNote.statusArmado ? <CheckCircle2 size={16} /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300" />}
+                    <span className="text-xs font-black uppercase tracking-widest">Armado</span>
                   </button>
                   <button 
                     onClick={() => toggleNoteStatus(currentSelectedNote.id, 'statusEntregado', !!currentSelectedNote.statusEntregado)}
                     className={`flex-1 flex items-center justify-center space-x-1.5 py-2.5 rounded-xl transition-all ${currentSelectedNote.statusEntregado ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
                   >
-                    {currentSelectedNote.statusEntregado ? <CheckCircle2 size={14} /> : <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-300" />}
-                    <span className="text-[9px] font-black uppercase tracking-widest">Entregado</span>
+                    {currentSelectedNote.statusEntregado ? <CheckCircle2 size={16} /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300" />}
+                    <span className="text-xs font-black uppercase tracking-widest">Entregado</span>
                   </button>
                   <button 
                     onClick={() => toggleNoteStatus(currentSelectedNote.id, 'statusCobrado', !!currentSelectedNote.statusCobrado)}
                     className={`flex-1 flex items-center justify-center space-x-1.5 py-2.5 rounded-xl transition-all ${currentSelectedNote.statusCobrado ? 'bg-amber-500 text-white shadow-lg shadow-amber-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
                   >
-                    {currentSelectedNote.statusCobrado ? <CheckCircle2 size={14} /> : <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-300" />}
-                    <span className="text-[9px] font-black uppercase tracking-widest">Cobrado</span>
+                    {currentSelectedNote.statusCobrado ? <CheckCircle2 size={16} /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300" />}
+                    <span className="text-xs font-black uppercase tracking-widest">Cobrado</span>
                   </button>
                 </div>
               </div>
@@ -530,28 +530,28 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                   <table className="w-full">
                     <thead className="border-b border-slate-100 sticky top-0 bg-white z-10">
                       <tr>
-                        <th className="text-left py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">PRODUCTO</th>
-                        <th className="text-center py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">CANT</th>
-                        <th className="text-right py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">TOTAL</th>
+                        <th className="text-left py-4 text-xs font-black text-slate-400 uppercase tracking-widest">PRODUCTO</th>
+                        <th className="text-center py-4 text-xs font-black text-slate-400 uppercase tracking-widest">CANT</th>
+                        <th className="text-right py-4 text-xs font-black text-slate-400 uppercase tracking-widest">TOTAL</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                       {currentSelectedNote.items.map((item, i) => (
                         <tr key={i}>
-                          <td className="py-4">
+                          <td className="py-5">
                             <div className="flex flex-col">
-                              <p className="text-slate-900 font-black text-xs uppercase whitespace-normal leading-tight">{item.nombre}</p>
-                              {item.codigo && <p className="text-indigo-600 font-black text-[9px] mt-0.5 tracking-widest">#{item.codigo}</p>}
-                              <p className="text-slate-400 font-bold text-[8px] uppercase mt-1">
+                              <p className="text-slate-900 font-bold text-base uppercase whitespace-normal leading-tight">{item.nombre}</p>
+                              {item.codigo && <p className="text-indigo-600 font-black text-xs mt-1 tracking-widest">#{item.codigo}</p>}
+                              <p className="text-slate-400 font-bold text-[11px] uppercase mt-1">
                                 {lines.find(l => l.id === products.find(p => p.id === item.productoId)?.lineaId)?.nombre || 'General'}
                               </p>
                             </div>
                           </td>
-                          <td className="py-4 text-center">
-                            <span className="text-xs font-black text-slate-900">{item.cantidad}</span>
+                          <td className="py-5 text-center">
+                            <span className="text-base font-black text-slate-900">{item.cantidad}</span>
                           </td>
-                          <td className="py-4 text-right">
-                            <p className="text-slate-900 font-black text-xs italic">${item.subtotal.toFixed(2)}</p>
+                          <td className="py-5 text-right">
+                            <p className="text-slate-900 font-black text-base italic">${item.subtotal.toFixed(2)}</p>
                           </td>
                         </tr>
                       ))}
@@ -559,56 +559,56 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                   </table>
 
                   {currentSelectedNote.observaciones && (
-                    <div className="mt-8 p-5 bg-slate-50 rounded-[30px] border border-slate-100">
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">NOTAS ADICIONALES</p>
-                      <p className="text-slate-600 text-xs font-medium italic">"{currentSelectedNote.observaciones}"</p>
+                    <div className="mt-8 p-6 bg-slate-50 rounded-[30px] border border-slate-100">
+                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">NOTAS ADICIONALES</p>
+                      <p className="text-slate-600 text-base font-medium italic">"{currentSelectedNote.observaciones}"</p>
                     </div>
                   )}
                 </div>
 
                 {/* Totals Section - Moved inside scrollable area */}
-                <div className="bg-slate-950 p-6 md:p-8 text-white mt-auto">
-                  <div className="max-w-[280px] ml-auto space-y-2 mb-6">
-                    <div className="flex justify-between text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                <div className="bg-slate-950 p-6 md:p-10 text-white mt-auto">
+                  <div className="max-w-[320px] ml-auto space-y-3 mb-8">
+                    <div className="flex justify-between text-xs font-black text-slate-500 uppercase tracking-widest">
                       <span>SUBTOTAL</span>
                       <span>${currentSelectedNote.subtotal.toFixed(2)}</span>
                     </div>
 
                     {((currentSelectedNote.montoDescuento || 0) > 0) && (
-                      <div className="flex justify-between text-[9px] font-black text-rose-400 uppercase tracking-widest">
+                      <div className="flex justify-between text-xs font-black text-rose-400 uppercase tracking-widest">
                         <span>DESCUENTO</span>
                         <span>-${currentSelectedNote.montoDescuento.toFixed(2)}</span>
                       </div>
                     )}
 
                     {((currentSelectedNote.taxAmount || 0) > 0) && (
-                      <div className="flex justify-between text-[9px] font-black text-indigo-400 uppercase tracking-widest">
+                      <div className="flex justify-between text-xs font-black text-indigo-400 uppercase tracking-widest">
                         <span>TAX (6.5%)</span>
                         <span>+${currentSelectedNote.taxAmount?.toFixed(2)}</span>
                       </div>
                     )}
 
                     {((currentSelectedNote.costoEnvio || 0) > 0) && (
-                      <div className="flex justify-between text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+                      <div className="flex justify-between text-xs font-black text-emerald-400 uppercase tracking-widest">
                         <span>ENVÍO</span>
                         <span>+${currentSelectedNote.costoEnvio.toFixed(2)}</span>
                       </div>
                     )}
 
-                    <div className="pt-4 mt-2 border-t border-slate-800 flex justify-between items-end">
-                      <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1.5">TOTAL A COBRAR</span>
-                      <span className="text-3xl font-black italic tracking-tighter">${currentSelectedNote.total.toFixed(2)}</span>
+                    <div className="pt-6 mt-4 border-t border-slate-800 flex justify-between items-end">
+                      <span className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-2">TOTAL A COBRAR</span>
+                      <span className="text-4xl font-black italic tracking-tighter">${currentSelectedNote.total.toFixed(2)}</span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 md:gap-4 pb-2 md:pb-0">
-                    <button className="bg-white/5 hover:bg-white/10 py-3 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all">
+                    <button className="bg-white/5 hover:bg-white/10 py-3 md:py-4 rounded-xl md:rounded-2xl text-xs md:text-sm font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all">
                       <Printer size={16} />
                       <span>Imprimir</span>
                     </button>
                     <button 
                       onClick={() => handleShare(currentSelectedNote)}
-                      className="bg-indigo-600 hover:bg-indigo-500 py-3 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all shadow-xl shadow-indigo-600/20"
+                      className="bg-indigo-600 hover:bg-indigo-500 py-3 md:py-4 rounded-xl md:rounded-2xl text-xs md:text-sm font-black uppercase tracking-widest flex items-center justify-center space-x-2 transition-all shadow-xl shadow-indigo-600/20"
                     >
                       <Share2 size={16} />
                       <span>Compartir</span>

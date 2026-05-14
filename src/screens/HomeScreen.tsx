@@ -68,8 +68,8 @@ export const HomeScreen: React.FC = () => {
             {selectedLineId === 'all' ? 'S' : lines.find(l => l.id === selectedLineId)?.emoji}
           </motion.div>
           <div>
-            <h1 className="text-lg font-black tracking-tighter text-white uppercase italic leading-none">STOCKY</h1>
-            <p className="text-[9px] font-black tracking-[0.2em] text-indigo-400/60 uppercase">
+            <h1 className="text-xl font-black tracking-tighter text-white uppercase italic leading-none">STOCKY</h1>
+            <p className="text-xs font-black tracking-[0.2em] text-indigo-400/60 uppercase">
               {selectedLineId === 'all' ? 'Catálogo Completo' : lines.find(l => l.id === selectedLineId)?.nombre}
             </p>
           </div>
@@ -84,10 +84,10 @@ export const HomeScreen: React.FC = () => {
             className={`flex items-center space-x-2 px-3 py-2 rounded-xl transition-all ${selectionMode ? 'bg-indigo-600 text-white' : 'bg-white/5 text-gray-400'}`}
           >
             {selectionMode ? <CheckSquare size={16} /> : <Square size={16} />}
-            <span className="text-[10px] font-black uppercase tracking-widest">{selectionMode ? 'CANCELAR' : 'MASIVO'}</span>
+            <span className="text-xs font-black uppercase tracking-widest">{selectionMode ? 'CANCELAR' : 'MASIVO'}</span>
           </button>
           
-          <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-[10px] font-bold ring-2 ring-indigo-500/20 uppercase">
+          <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold ring-2 ring-indigo-500/20 uppercase">
             {user?.email?.charAt(0) || 'A'}
           </div>
         </div>
@@ -108,15 +108,15 @@ export const HomeScreen: React.FC = () => {
                   <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center">
                     <Download size={10} className="text-white" />
                   </div>
-                  <h3 className="text-white font-black text-xs uppercase tracking-widest">App Móvil Disponible</h3>
+                  <h3 className="text-white font-black text-sm uppercase tracking-widest">App Móvil Disponible</h3>
                 </div>
-                <p className="text-white/80 text-[10px] font-bold leading-tight">
+                <p className="text-white/80 text-sm font-bold leading-tight">
                   Instala para usar sin navegador y recibir actualizaciones automáticas.
                 </p>
               </div>
               <button 
                 onClick={installApp}
-                className="bg-white text-indigo-600 px-5 py-2.5 rounded-2xl font-black text-[10px] shadow-xl active:scale-90 transition-all flex items-center space-x-2 border-none ring-4 ring-white/10"
+                className="bg-white text-indigo-600 px-5 py-2.5 rounded-2xl font-black text-xs shadow-xl active:scale-90 transition-all flex items-center space-x-2 border-none ring-4 ring-white/10"
               >
                 <span>DESCARGAR</span>
               </button>
@@ -187,8 +187,8 @@ export const HomeScreen: React.FC = () => {
             className="fixed bottom-24 left-4 right-4 bg-indigo-600 rounded-3xl p-4 flex items-center justify-between shadow-2xl z-40"
           >
             <div className="flex flex-col">
-              <span className="text-[10px] font-black uppercase text-indigo-200 tracking-widest">Seleccionados</span>
-              <span className="text-white font-black text-xl leading-none">{selectedItems.length.toString().padStart(2, '0')}</span>
+              <span className="text-xs font-black uppercase text-indigo-200 tracking-widest">Seleccionados</span>
+              <span className="text-white font-black text-2xl leading-none">{selectedItems.length.toString().padStart(2, '0')}</span>
             </div>
             
             <div className="flex space-x-2">
@@ -201,7 +201,7 @@ export const HomeScreen: React.FC = () => {
                   className="bg-white/20 hover:bg-white/30 text-white px-4 py-3 rounded-2xl flex items-center space-x-2 transition-all active:scale-95"
                 >
                   <Plus size={18} />
-                  <span className="text-xs font-black uppercase tracking-widest leading-none">EDITAR</span>
+                  <span className="text-sm font-black uppercase tracking-widest leading-none">EDITAR</span>
                 </button>
               )}
               <button 
@@ -209,7 +209,7 @@ export const HomeScreen: React.FC = () => {
                 className="bg-white/20 hover:bg-white/30 text-white px-5 py-3 rounded-2xl flex items-center space-x-2 transition-all active:scale-95"
               >
                 <ArrowUpDown size={18} />
-                <span className="text-xs font-black uppercase tracking-widest leading-none">MODIFICAR LOTE</span>
+                <span className="text-sm font-black uppercase tracking-widest leading-none">MODIFICAR LOTE</span>
               </button>
               
               <button 
