@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowUpRight, ArrowDownRight, Package, Save, Check } from 'lucide-react';
 import { Product } from '../types';
 import { registerBatchMovement } from '../services/firestoreService';
+import { useApp } from '../AppContext';
 
 interface BulkMovementModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
   onClose,
   onSuccess
 }) => {
+  const { lines } = useApp();
   const [type, setType] = useState<'ingreso' | 'egreso'>('egreso');
   const [quantities, setQuantities] = useState<Record<string, number>>(
     selectedProducts.reduce((acc, p) => ({ ...acc, [p.id]: 1 }), {})
@@ -123,8 +125,13 @@ export const BulkMovementModal: React.FC<BulkMovementModalProps> = ({
                     className="bg-[#24243E]/50 p-4 rounded-2xl border border-white/5 flex items-center space-x-4"
                   >
                     <span className="text-2xl">{product.emoji}</span>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-bold text-white leading-tight line-clamp-1">{product.nombre}</h4>
+                    <div className="flex-1 min-w-0 py-1">
+                      <h4 className="text-[14px] font-black text-white leading-tight uppercase">{product.nombre}</h4>
+                      {lines.find(l => l.id === product.lineaId) && (
+                        <p className="font-black text-[9px] uppercase tracking-widest mt-0.5" style={{ color: lines.find(l => l.id === product.lineaId)?.color }}>
+                          {lines.find(l => l.id === product.lineaId)?.nombre}
+                        </p>
+                      )}
                       <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">{product.stockActual} en stock</p>
                     </div>
                     <div className="flex items-center space-x-3">

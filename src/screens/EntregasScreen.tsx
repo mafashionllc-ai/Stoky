@@ -92,11 +92,12 @@ export const EntregasScreen: React.FC = () => {
     const details = [
       `🔸 *SUBTOTAL:* $${note.subtotal.toFixed(2)}`,
       note.montoDescuento > 0 ? `🔻 *DESCUENTO:* -$${note.montoDescuento.toFixed(2)}` : null,
-      currentTaxAmount > 0 ? `🔹 *TAX (6.5%):* +$${currentTaxAmount.toFixed(2)}` : null,
+      currentTaxAmount > 0 ? `🔹 *TAX (6.5%):* +$${currentTaxAmount.toFixed(2)}` : `🔹 *TAX:* EXENTO`,
       note.costoEnvio > 0 ? `🚚 *ENVÍO:* +$${note.costoEnvio.toFixed(2)}` : null,
     ].filter(Boolean).join('\n');
 
     const shareText = `🛍️ *VENTA FINAL - S PROFESSIONAL*
++⚠️ _Precios no incluyen TAX (6.5%)_
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📅 *FECHA:* ${formatDate(note.fecha)}
 📝 *Nº NOTA:* ${note.nroNota}
@@ -539,10 +540,10 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
                       {currentSelectedNote.items.map((item, i) => (
                         <tr key={i}>
                           <td className="py-5">
-                            <div className="flex flex-col">
-                              <p className="text-slate-900 font-bold text-base uppercase whitespace-normal leading-tight">{item.nombre}</p>
+                            <div className="flex flex-col py-1">
+                              <p className="text-slate-900 font-black text-sm sm:text-base uppercase leading-tight break-words">{item.nombre}</p>
                               {item.codigo && <p className="text-indigo-600 font-black text-xs mt-1 tracking-widest">#{item.codigo}</p>}
-                              <p className="text-slate-400 font-bold text-[11px] uppercase mt-1">
+                              <p className="font-black text-[10px] uppercase mt-1 tracking-widest" style={{ color: lines.find(l => l.id === products.find(p => p.id === item.productoId)?.lineaId)?.color }}>
                                 {lines.find(l => l.id === products.find(p => p.id === item.productoId)?.lineaId)?.nombre || 'General'}
                               </p>
                             </div>
@@ -568,36 +569,40 @@ ${note.observaciones ? `\n📝 *NOTA:* ${note.observaciones}` : ''}`;
 
                 {/* Totals Section - Moved inside scrollable area */}
                 <div className="bg-slate-950 p-6 md:p-10 text-white mt-auto">
-                  <div className="max-w-[320px] ml-auto space-y-3 mb-8">
+                   <h4 className="text-slate-500 font-black text-[10px] uppercase tracking-[0.3em] mb-6 text-center italic">Estructura de Cobro</h4>
+                  <div className="max-w-[400px] mx-auto space-y-4 mb-8">
                     <div className="flex justify-between text-xs font-black text-slate-500 uppercase tracking-widest">
-                      <span>SUBTOTAL</span>
-                      <span>${currentSelectedNote.subtotal.toFixed(2)}</span>
+                      <span>1. SUBTOTAL PRODUCTOS</span>
+                      <span className="text-white">${currentSelectedNote.subtotal.toFixed(2)}</span>
                     </div>
 
                     {((currentSelectedNote.montoDescuento || 0) > 0) && (
                       <div className="flex justify-between text-xs font-black text-rose-400 uppercase tracking-widest">
-                        <span>DESCUENTO</span>
+                        <span>2. DESCUENTO</span>
                         <span>-${currentSelectedNote.montoDescuento.toFixed(2)}</span>
                       </div>
                     )}
 
-                    {((currentSelectedNote.taxAmount || 0) > 0) && (
-                      <div className="flex justify-between text-xs font-black text-indigo-400 uppercase tracking-widest">
-                        <span>TAX (6.5%)</span>
-                        <span>+${currentSelectedNote.taxAmount?.toFixed(2)}</span>
-                      </div>
-                    )}
+                    <div className="flex justify-between text-xs font-black text-indigo-400 uppercase tracking-widest">
+                      <span>3. TAX (6.5%)</span>
+                      <span className={!currentSelectedNote.taxAmount ? 'text-slate-600' : ''}>
+                        {currentSelectedNote.taxAmount ? `+$${currentSelectedNote.taxAmount.toFixed(2)}` : 'EXENTO'}
+                      </span>
+                    </div>
 
                     {((currentSelectedNote.costoEnvio || 0) > 0) && (
                       <div className="flex justify-between text-xs font-black text-emerald-400 uppercase tracking-widest">
-                        <span>ENVÍO</span>
+                        <span>4. ENVÍO (MANUAL)</span>
                         <span>+${currentSelectedNote.costoEnvio.toFixed(2)}</span>
                       </div>
                     )}
 
-                    <div className="pt-6 mt-4 border-t border-slate-800 flex justify-between items-end">
-                      <span className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-2">TOTAL A COBRAR</span>
-                      <span className="text-4xl font-black italic tracking-tighter">${currentSelectedNote.total.toFixed(2)}</span>
+                    <div className="pt-8 mt-4 border-t border-slate-800 flex justify-between items-end">
+                      <span className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">Total a Cobrar</span>
+                      <div className="flex items-baseline space-x-2">
+                        <span className="text-slate-600 font-bold">$</span>
+                        <span className="text-5xl font-black italic tracking-tighter tabular-nums">${currentSelectedNote.total.toFixed(2)}</span>
+                      </div>
                     </div>
                   </div>
 

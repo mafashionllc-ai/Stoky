@@ -381,8 +381,8 @@ export const ReportesScreen: React.FC = () => {
             <div key={p.id} className="bg-[#24243E] p-4 rounded-2xl flex items-center justify-between border border-white/5">
               <div className="flex items-center space-x-3">
                 <span className="text-2xl">{p.emoji}</span>
-                <div>
-                  <h4 className="text-white font-bold text-sm truncate w-40">{p.nombre}</h4>
+                <div className="flex-1 min-w-0 pr-2">
+                  <h4 className="text-white font-black text-sm uppercase leading-tight break-words">{p.nombre}</h4>
                   <p className="text-red-500 text-xs font-bold">Mínimo: {p.stockMinimo} / Actual: {p.stockActual}</p>
                 </div>
               </div>

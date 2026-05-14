@@ -171,7 +171,13 @@ export const AdminPromotionModal: React.FC<AdminPromotionModalProps> = ({
                           <span className="text-2xl mr-4">{p.emoji}</span>
                           <div className="flex-1">
                             <h4 className="text-sm font-bold text-white line-clamp-1">{p.nombre}</h4>
-                            <p className="text-[10px] text-gray-500 font-bold">${p.precio?.toFixed(2)} / ud</p>
+                            <div className="flex items-center space-x-2">
+                              <p className="text-[10px] text-gray-500 font-bold">${p.precio?.toFixed(2)} / ud</p>
+                              <span className="w-1 h-1 rounded-full bg-gray-700" />
+                              <p className={`text-[10px] font-black uppercase ${p.stockActual <= (p.stockMinimo || 0) ? 'text-amber-500' : 'text-emerald-500'}`}>
+                                Stock: {p.stockActual}
+                              </p>
+                            </div>
                           </div>
                           <div className="flex items-center space-x-3">
                             <button 

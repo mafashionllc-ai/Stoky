@@ -313,9 +313,9 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl mr-4 ${isSelected ? 'bg-indigo-500 text-white' : 'bg-white/5'}`}>
                             {isSelected ? <CheckCircle2 size={24} /> : product.emoji}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-sm uppercase truncate text-white leading-tight">{product.nombre}</p>
-                            <p className="text-xs font-medium text-slate-500 mt-1">${product.precio?.toFixed(2)}</p>
+                          <div className="flex-1 min-w-0 py-1">
+                            <p className="font-black text-[13px] sm:text-sm uppercase text-white leading-tight break-words">{product.nombre}</p>
+                            <p className="text-[11px] font-bold text-slate-500 mt-1.5 opacity-60">${product.precio?.toFixed(2)}</p>
                           </div>
                         </button>
                       );
@@ -391,11 +391,11 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
                                   <div className="w-10 h-10 bg-[#1A1A2E] rounded-xl flex items-center justify-center text-lg shadow-xl shrink-0 border border-white/10">
                                     {item.product.emoji}
                                   </div>
-                                  <div className="min-w-0 pr-4 flex-1">
-                                    <p className="text-white font-black text-xs uppercase leading-tight group-hover:whitespace-normal whitespace-normal">
+                                  <div className="min-w-0 pr-4 flex-1 py-1">
+                                    <p className="text-white font-black text-sm uppercase leading-tight break-words">
                                       {item.product.nombre}
                                     </p>
-                                    <p className="text-slate-500 font-bold text-[8px] uppercase mt-0.5">
+                                    <p className="font-black text-[10px] uppercase mt-2 tracking-widest opacity-70" style={{ color: lines.find(l => l.id === item.product.lineaId)?.color }}>
                                       {lines.find(l => l.id === item.product.lineaId)?.nombre || 'General'}
                                     </p>
                                   </div>
@@ -514,33 +514,46 @@ export const DeliveryNoteModal: React.FC<DeliveryNoteModalProps> = ({ isOpen, on
                     </div>
 
                     <div className="pt-6">
-                      <h3 className="text-white/40 font-black text-[10px] uppercase tracking-[0.3em] pb-3 border-b border-white/5 mb-4">Venta Final</h3>
+                      <h3 className="text-white/40 font-black text-xs uppercase tracking-[0.3em] pb-3 border-b border-white/5 mb-4">Estructura de Cobro</h3>
                       <div className="space-y-4">
-                        <div className="flex justify-between items-center text-[10px] font-bold text-slate-500">
-                          <span className="tracking-widest">SUBTOTAL</span>
-                          <span className="text-white tabular-nums">${subtotal.toFixed(2)}</span>
+                        {/* 1. Subtotal */}
+                        <div className="flex justify-between items-center text-xs font-black text-slate-400">
+                          <span className="tracking-widest">SUBTOTAL PRODUCTOS</span>
+                          <span className="text-white tabular-nums text-sm">${subtotal.toFixed(2)}</span>
                         </div>
-                        {aplicarTax && (
-                          <div className="flex justify-between items-center text-[10px] font-bold text-indigo-400">
-                            <span className="tracking-widest">TAX (6.5%)</span>
-                            <span className="tabular-nums">+${taxAmount.toFixed(2)}</span>
-                          </div>
-                        )}
+
+                        {/* 2. Descuento */}
                         {montoDescuento > 0 && (
-                          <div className="flex justify-between items-center text-[10px] font-bold text-rose-500">
+                          <div className="flex justify-between items-center text-xs font-black text-rose-500">
                             <span className="tracking-widest capitalize">DESCUENTO ({tipoDescuento === 'porcentaje' ? `${valorDescuento}%` : 'Monto'})</span>
-                            <span className="tabular-nums">-${montoDescuento.toFixed(2)}</span>
+                            <span className="tabular-nums text-sm">-${montoDescuento.toFixed(2)}</span>
                           </div>
                         )}
+
+                        {/* 3. Tax (Optional) */}
+                        <div className="flex justify-between items-center text-xs font-black text-indigo-400">
+                          <div className="flex items-center space-x-2">
+                             <span className="tracking-widest">TAX (6.5%)</span>
+                             {!aplicarTax && <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded text-slate-500">EXENTO</span>}
+                          </div>
+                          <span className="tabular-nums text-sm">{aplicarTax ? `+$${taxAmount.toFixed(2)}` : '$0.00'}</span>
+                        </div>
+
+                        {/* 4. Envío */}
                         {costoEnvio > 0 && (
-                          <div className="flex justify-between items-center text-[10px] font-bold text-emerald-400">
-                            <span className="tracking-widest capitalize">ENVÍO</span>
-                            <span className="tabular-nums">+${costoEnvio.toFixed(2)}</span>
+                          <div className="flex justify-between items-center text-xs font-black text-emerald-400">
+                            <span className="tracking-widest capitalize">ENVÍO (MANUAL)</span>
+                            <span className="tabular-nums text-sm">+$${costoEnvio.toFixed(2)}</span>
                           </div>
                         )}
-                        <div className="pt-4 mt-2 border-t border-white/10 flex flex-col items-end">
-                          <span className="text-[9px] font-black text-indigo-500 tracking-[0.4em] uppercase mb-1">Total a Cobrar</span>
-                          <span className="text-4xl font-black text-white italic tracking-tighter tabular-nums">${total.toFixed(2)}</span>
+
+                        {/* 5. Total */}
+                        <div className="pt-6 mt-2 border-t border-white/10 flex flex-col items-end">
+                          <span className="text-[10px] font-black text-indigo-500 tracking-[0.4em] uppercase mb-2 italic">Total de la Nota</span>
+                          <div className="flex items-baseline space-x-2">
+                             <span className="text-slate-500 text-sm font-bold">$</span>
+                             <span className="text-5xl font-black text-white italic tracking-tighter tabular-nums">${total.toFixed(2)}</span>
+                          </div>
                         </div>
                       </div>
                     </div>

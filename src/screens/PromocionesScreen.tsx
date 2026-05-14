@@ -19,25 +19,31 @@ export const PromocionesScreen: React.FC = () => {
 
   const handleShare = (promo: Promotion) => {
     const productsList = promo.productos
-      .map(p => `🔹 ${p.cantidad}x ${p.nombre.toUpperCase()}`)
+      .map(p => {
+        const prod = products.find(prod => prod.id === p.productoId);
+        const line = lines.find(l => l.id === prod?.lineaId);
+        const lineText = line ? ` _(${line.nombre})_` : '';
+        return `🔹 ${p.cantidad}x ${p.nombre.toUpperCase()}${lineText}`;
+      })
       .join('\n');
 
     const message = `🔥 *PROMOCIÓN ESPECIAL: ${promo.nombre.toUpperCase()}* 🔥
+⚠️ _Precios no incluyen TAX (6.5%)_
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-¡Aprovecha esta oferta por tiempo limitado!
+✨ ¡Aprovecha esta oferta por tiempo limitado!
 
-📦 *INCLUYE:*
+📦 *LO QUE INCLUYE:*
 ${productsList}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-💵 *PRECIO ESPECIAL:*
-🔸 Precio Regular: $${promo.subtotalRegular.toFixed(2)}
-✨ *PRECIO PROMO:* *$${promo.totalFinal.toFixed(2)}*
-📉 *AHORRAS:* $${(promo.subtotalRegular - promo.totalFinal).toFixed(2)} (${((1 - promo.totalFinal / promo.subtotalRegular) * 100).toFixed(0)}% OFF)
+💰 *INVERSIÓN:*
+🔸 Antes: $${promo.subtotalRegular.toFixed(2)}
+✨ *OFERTA:* *$${promo.totalFinal.toFixed(2)}*
+💎 *AHORRAS:* $${(promo.subtotalRegular - promo.totalFinal).toFixed(2)} (${((1 - promo.totalFinal / promo.subtotalRegular) * 100).toFixed(0)}% OFF)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏦 *MÉTODOS DE PAGO:*
-📌 *ZELE:* MA Fashion LLC
+📌 *ZELLE:* MA Fashion LLC
 📱 *Número:* 407 2181294
 
 🚀 ¡Pide la tuya ahora mismo!
@@ -95,11 +101,21 @@ _MA Fashion - S Professional_`;
             <div className="space-y-2 mb-6">
               {promo.productos.map((p, idx) => {
                 const prodInfo = products.find(prod => prod.id === p.productoId);
+                const lineInfo = lines.find(l => l.id === prodInfo?.lineaId);
                 return (
                   <div key={idx} className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <span className="text-lg">{prodInfo?.emoji || '📦'}</span>
-                      <span className="text-xs font-bold text-gray-300">{p.nombre}</span>
+                      <div className="flex flex-col">
+                         <div className="flex items-center space-x-2 py-1">
+                            <span className="text-xl">{prodInfo?.emoji || '📦'}</span>
+                            <span className="text-sm font-black text-gray-200 uppercase leading-tight break-words">{p.nombre}</span>
+                         </div>
+                        {lineInfo && (
+                          <span className="text-[9px] font-black uppercase tracking-widest ml-7" style={{ color: lineInfo.color }}>
+                            {lineInfo.nombre}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <span className="text-xs font-black text-indigo-400">{p.cantidad} ud</span>
                   </div>
@@ -114,6 +130,7 @@ _MA Fashion - S Professional_`;
                   <p className="text-indigo-400 text-3xl font-black italic tracking-tighter leading-none">${promo.totalFinal.toFixed(2)}</p>
                   <span className="text-emerald-500 text-[10px] font-black uppercase tracking-tighter">-{((1 - promo.totalFinal/promo.subtotalRegular)*100).toFixed(0)}%</span>
                 </div>
+                <p className="text-[9px] font-black text-amber-500 uppercase tracking-widest mt-1 opacity-80">* No incluye TAX</p>
               </div>
               <div className="flex space-x-2">
                 <button 

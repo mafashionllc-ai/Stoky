@@ -24,9 +24,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isLowStock = product.stockActual <= product.stockMinimo && product.stockActual > 0;
   const isOutOfStock = product.stockActual <= 0;
 
-  const typeIcon = product.tipo === 'cabina' ? <User size={10} /> : product.tipo === 'after_care' ? <Home size={10} /> : <Layers size={10} />;
-  const typeLabel = product.tipo === 'cabina' ? 'PROFESIONAL' : product.tipo === 'after_care' ? 'HOME CARE' : 'MIXTO';
-  const typeColor = product.tipo === 'cabina' ? 'bg-indigo-500/20 text-indigo-400' : product.tipo === 'after_care' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400';
+  const typeIcon = product.tipo === 'cabina' ? <User size={12} className="shrink-0" /> : product.tipo === 'after_care' ? <Home size={12} className="shrink-0" /> : <Layers size={12} className="shrink-0" />;
+  const typeLabel = product.tipo === 'cabina' ? 'CABINA' : product.tipo === 'after_care' ? 'HOME CARE' : 'MIXTO';
+  const typeColor = product.tipo === 'cabina' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' : product.tipo === 'after_care' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
 
   const lineThemeColor = line?.color || '#6366f1';
   const borderColor = isSelected 
@@ -54,23 +54,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <span className="text-xl sm:text-3xl transition-all mb-0.5 sm:mb-1">
             {line?.emoji || '✨'}
           </span>
-          <span className="text-xs sm:text-sm font-black tracking-widest uppercase opacity-40 truncate max-w-full text-center hidden sm:block" style={{ color: lineThemeColor }}>
+          <span className="text-[10px] sm:text-sm font-black tracking-widest uppercase opacity-40 truncate max-w-[60px] sm:max-w-full text-center" style={{ color: lineThemeColor }}>
              {line?.nombre || 'Gral'}
           </span>
         </div>
 
         {/* Middle: Product Content */}
-        <div className="flex-1 min-w-0 pr-2 sm:pr-4">
-          <h4 className="text-[16px] sm:text-[17px] font-normal text-white leading-tight tracking-tight line-clamp-1 mb-1 sm:mb-1.5">
+        <div className="flex-1 min-w-0 pr-2 sm:pr-4 py-1">
+          <h4 className="text-[17px] sm:text-lg font-black text-white leading-tight tracking-tight mb-1.5 uppercase">
             {product.nombre}
           </h4>
           
           <div className="flex items-center space-x-2 sm:space-x-3">
-             <div className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-md ${typeColor}`}>
-                <span className="scale-75 sm:scale-100 -ml-0.5 sm:ml-0">{typeIcon}</span>
-                <span className="text-xs sm:text-sm font-black tracking-widest uppercase hidden sm:inline">{typeLabel}</span>
+             <div className={`flex items-center space-x-1.5 px-2 py-0.5 rounded-full border ${typeColor}`}>
+                {typeIcon}
+                <span className="text-[9px] sm:text-[10px] font-black tracking-widest uppercase">{typeLabel}</span>
              </div>
-             {product.codigo && <span className="text-xs sm:text-sm text-gray-500 font-medium tracking-widest uppercase">#{product.codigo}</span>}
+             {product.codigo && <span className="text-[10px] sm:text-sm text-gray-500 font-medium tracking-widest uppercase">#{product.codigo}</span>}
           </div>
         </div>
 
@@ -82,7 +82,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
           
           <div className="flex flex-col items-center min-w-[28px] sm:min-w-[36px]">
-            <span className="text-[16px] sm:text-xl font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}">
+            <span className={`text-[16px] sm:text-xl font-black leading-none ${isOutOfStock ? 'text-red-400' : isLowStock ? 'text-amber-400' : 'text-white'}`}>
               {product.stockActual}
             </span>
             <span className="text-xs sm:text-sm text-gray-600 uppercase font-black tracking-tighter mt-0.5 hidden sm:block">unid</span>
