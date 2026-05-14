@@ -24,7 +24,7 @@
         "lineaId": { "type": "string" },
         "emoji": { "type": "string" },
         "descripcion": { "type": "string" },
-        "tipo": { "enum": ["after_care", "cabina", "ambos"] },
+        "tipo": { "enum": ["after_care", "salon", "cabina", "ambos"] },
         "stockActual": { "type": "number" },
         "stockMinimo": { "type": "number" },
         "precio": { "type": "number" },

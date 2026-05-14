@@ -1,7 +1,7 @@
 
 import { Timestamp } from 'firebase/firestore';
 
-export type ProductType = 'after_care' | 'cabina' | 'ambos';
+export type ProductType = 'after_care' | 'salon' | 'ambos';
 export type MovementType = 'ingreso' | 'egreso';
 export type PromoDiscountType = 'porcentaje' | 'monto_fijo';
 export type DeliveryDiscountType = 'porcentaje' | 'monto_fijo';

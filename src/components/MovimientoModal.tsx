@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Minus, ArrowDownCircle, ArrowUpCircle } from 'lucide-react';
+import { X, Plus, Minus, ArrowDownCircle, ArrowUpCircle, Edit2 } from 'lucide-react';
 import { Product, TreatmentLine } from '../types';
 import { registerMovement } from '../services/firestoreService';
 
@@ -10,9 +10,10 @@ interface MovementModalProps {
   line?: TreatmentLine;
   isOpen: boolean;
   onClose: () => void;
+  onEdit?: () => void;
 }
 
-export const MovementModal: React.FC<MovementModalProps> = ({ product, line, isOpen, onClose }) => {
+export const MovementModal: React.FC<MovementModalProps> = ({ product, line, isOpen, onClose, onEdit }) => {
   const [cantidad, setCantidad] = React.useState(1);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -50,9 +51,23 @@ export const MovementModal: React.FC<MovementModalProps> = ({ product, line, isO
         >
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-white text-2xl font-bold">Movimiento</h2>
-            <button onClick={onClose} className="text-slate-400 hover:text-white">
-              <X size={24} />
-            </button>
+            <div className="flex items-center space-x-4">
+              {onEdit && (
+                <button 
+                  onClick={onEdit} 
+                  className="text-slate-400 hover:text-indigo-400 transition-colors p-2 hover:bg-indigo-500/10 rounded-xl"
+                  title="Editar producto"
+                >
+                  <Edit2 size={20} />
+                </button>
+              )}
+              <button 
+                onClick={onClose} 
+                className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-xl"
+              >
+                <X size={24} />
+              </button>
+            </div>
           </div>
 
           <div className="bg-[#24243E] p-4 rounded-2xl mb-8 flex items-center space-x-4">

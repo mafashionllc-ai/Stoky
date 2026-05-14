@@ -52,7 +52,7 @@ export const ReportesScreen: React.FC = () => {
       }, 0);
 
       const total = calcTotalValue(lineProducts);
-      const cabin = calcTotalValue(lineProducts.filter(p => p.tipo === 'cabina'));
+      const cabin = calcTotalValue(lineProducts.filter(p => p.tipo === 'salon' || (p.tipo as string) === 'cabina'));
       const home = calcTotalValue(lineProducts.filter(p => p.tipo === 'after_care'));
       const ambos = calcTotalValue(lineProducts.filter(p => p.tipo === 'ambos'));
       
@@ -330,7 +330,7 @@ export const ReportesScreen: React.FC = () => {
 
               <div className="grid grid-cols-3 gap-2">
                 <div className="bg-[#1A1A2E] p-3 rounded-2xl border border-white/5">
-                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Profesional</p>
+                  <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1 leading-none">Salon</p>
                   <p className="text-sm font-black text-white">${line.cabin.toLocaleString()}</p>
                 </div>
                 <div className="bg-[#1A1A2E] p-3 rounded-2xl border border-white/5">

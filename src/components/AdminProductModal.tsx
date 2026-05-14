@@ -37,7 +37,8 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
       setCosto(productToEdit.costo?.toString() || '');
       setStockMinimo(productToEdit.stockMinimo?.toString() || '5');
       setStockActual(productToEdit.stockActual?.toString() || '0');
-      setTipo(productToEdit.tipo || 'ambos');
+      const initialTipo = productToEdit.tipo || 'ambos';
+      setTipo((initialTipo as string) === 'cabina' ? 'salon' : initialTipo);
       setShowConfirmDelete(false);
     } else {
       setNombre('');
@@ -201,10 +202,10 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                   <p className="text-xs font-black uppercase text-gray-500 tracking-widest pl-2">Uso del Producto</p>
                   <div className="flex bg-[#24243E] p-1 rounded-2xl relative shadow-inner">
                     <button
-                      onClick={() => setTipo('cabina')}
-                      className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest z-10 transition-colors ${tipo === 'cabina' ? 'text-white' : 'text-gray-500'}`}
+                      onClick={() => setTipo('salon')}
+                      className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest z-10 transition-colors ${(tipo === 'salon' || (tipo as string) === 'cabina') ? 'text-white' : 'text-gray-500'}`}
                     >
-                      Profesional
+                      Salon
                     </button>
                     <button
                       onClick={() => setTipo('after_care')}
@@ -221,7 +222,7 @@ export const AdminProductModal: React.FC<AdminProductModalProps> = ({ isOpen, on
                     <motion.div
                       layoutId="tipo-bg"
                       animate={{ 
-                        x: tipo === 'cabina' ? '0%' : tipo === 'after_care' ? '100%' : '200%' 
+                        x: (tipo === 'salon' || (tipo as string) === 'cabina') ? '0%' : tipo === 'after_care' ? '100%' : '200%' 
                       }}
                       className="absolute top-1 bottom-1 left-1 w-[calc(33.33%-4px)] bg-indigo-600 rounded-xl shadow-lg"
                     />

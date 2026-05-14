@@ -111,6 +111,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const sortedProducts = React.useMemo(() => {
     const typeOrder: Record<string, number> = {
+      'salon': 0,
       'cabina': 0,
       'after_care': 1,
       'ambos': 2

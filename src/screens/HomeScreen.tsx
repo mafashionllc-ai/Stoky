@@ -249,6 +249,11 @@ export const HomeScreen: React.FC = () => {
           product={selectedProduct}
           line={lines.find(l => l.id === selectedProduct.lineaId)}
           onClose={() => setSelectedProduct(null)}
+          onEdit={() => {
+            setProductToEdit(selectedProduct);
+            setIsAdminProductOpen(true);
+            setSelectedProduct(null);
+          }}
         />
       )}
 

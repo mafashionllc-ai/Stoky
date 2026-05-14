@@ -24,9 +24,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isLowStock = product.stockActual <= product.stockMinimo && product.stockActual > 0;
   const isOutOfStock = product.stockActual <= 0;
 
-  const typeIcon = product.tipo === 'cabina' ? <User size={12} className="shrink-0" /> : product.tipo === 'after_care' ? <Home size={12} className="shrink-0" /> : <Layers size={12} className="shrink-0" />;
-  const typeLabel = product.tipo === 'cabina' ? 'CABINA' : product.tipo === 'after_care' ? 'HOME CARE' : 'MIXTO';
-  const typeColor = product.tipo === 'cabina' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' : product.tipo === 'after_care' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+  const isSalon = product.tipo === 'salon' || (product.tipo as string) === 'cabina';
+  const typeIcon = isSalon ? <User size={12} className="shrink-0" /> : product.tipo === 'after_care' ? <Home size={12} className="shrink-0" /> : <Layers size={12} className="shrink-0" />;
+  const typeLabel = isSalon ? 'SALON' : product.tipo === 'after_care' ? 'HOME CARE' : 'MIXTO';
+  const typeColor = isSalon ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' : product.tipo === 'after_care' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
 
   const lineThemeColor = line?.color || '#6366f1';
   const borderColor = isSelected 
